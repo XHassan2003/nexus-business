@@ -1,10 +1,10 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
 
 const Navbar = () => {
   const location = useLocation();
-  const hideOnRoutes = ['/login', '/register'];
-  
+  const hideOnRoutes = ["/login", "/register"];
+
   if (hideOnRoutes.includes(location.pathname)) return null;
 
   return (
@@ -13,80 +13,102 @@ const Navbar = () => {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex-shrink-0 flex items-center">
-              <span className="text-xl font-bold text-green-600 transition-colors duration-200">Nexus Business</span>
+              <span className="text-xl font-bold text-green-600 transition-colors duration-200">
+                Nexus Business
+              </span>
             </Link>
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-              <Link 
-                to="/" 
-                className={`${location.pathname === '/' ? 'border-green-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors duration-200`}
+              <Link
+                to="/"
+                className={`${
+                  location.pathname === "/"
+                    ? "border-green-500 text-gray-900"
+                    : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors duration-200`}
               >
                 Home
               </Link>
-              <Link 
-                to="/about" 
-                className={`${location.pathname === '/about' ? 'border-green-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors duration-200`}
+              <Link
+                to="/about"
+                className={`${
+                  location.pathname === "/about"
+                    ? "border-green-500 text-gray-900"
+                    : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors duration-200`}
               >
                 About
               </Link>
-              <Link 
-                to="/contact" 
-                className={`${location.pathname === '/contact' ? 'border-green-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors duration-200`}
+              <Link
+                to="/contact"
+                className={`${
+                  location.pathname === "/contact"
+                    ? "border-green-500 text-gray-900"
+                    : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors duration-200`}
               >
                 Contact
               </Link>
             </div>
           </div>
           <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-4">
-            <Link 
-              to="/dashboard/startup" 
-              className={`${location.pathname === '/dashboard/startup' ? 'text-green-600' : 'text-gray-700 hover:text-green-600'} px-3 py-2 text-sm font-medium transition-colors duration-200`}
+            <Link
+              to="/dashboard"
+              className={`${
+                location.pathname === "/dashboard"
+                  ? "text-green-600"
+                  : "text-gray-700 hover:text-green-600"
+              } px-3 py-2 text-sm font-medium transition-colors duration-200`}
             >
-              Startup Dashboard
+              Dashboard
             </Link>
-            <Link 
-              to="/dashboard/investor" 
-              className={`${location.pathname === '/dashboard/investor' ? 'text-green-600' : 'text-gray-700 hover:text-green-600'} px-3 py-2 text-sm font-medium transition-colors duration-200`}
-            >
-              Investor Dashboard
-            </Link>
-            <Link 
-              to="/login" 
+            <Link
+              to="/login"
               className="bg-green-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200"
             >
               Login
             </Link>
           </div>
-          
+
           {/* Mobile menu button */}
           <div className="flex items-center sm:hidden">
-            <button 
-              type="button" 
+            <button
+              type="button"
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500"
               aria-controls="mobile-menu"
               aria-expanded="false"
             >
               <span className="sr-only">Open main menu</span>
               {/* Icon when menu is closed */}
-              <svg 
-                className="block h-6 w-6" 
-                xmlns="http://www.w3.org/2000/svg" 
-                fill="none" 
-                viewBox="0 0 24 24" 
-                stroke="currentColor" 
+              <svg
+                className="block h-6 w-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
                 aria-hidden="true"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
               </svg>
               {/* Icon when menu is open */}
-              <svg 
-                className="hidden h-6 w-6" 
-                xmlns="http://www.w3.org/2000/svg" 
-                fill="none" 
-                viewBox="0 0 24 24" 
-                stroke="currentColor" 
+              <svg
+                className="hidden h-6 w-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
                 aria-hidden="true"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>
@@ -96,38 +118,48 @@ const Navbar = () => {
       {/* Mobile menu, show/hide based on menu state. */}
       <div className="sm:hidden" id="mobile-menu">
         <div className="pt-2 pb-3 space-y-1">
-          <Link 
-            to="/" 
-            className={`${location.pathname === '/' ? 'bg-green-50 border-green-500 text-green-700' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium transition-colors duration-200`}
+          <Link
+            to="/"
+            className={`${
+              location.pathname === "/"
+                ? "bg-green-50 border-green-500 text-green-700"
+                : "border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800"
+            } block pl-3 pr-4 py-2 border-l-4 text-base font-medium transition-colors duration-200`}
           >
             Home
           </Link>
-          <Link 
-            to="/about" 
-            className={`${location.pathname === '/about' ? 'bg-green-50 border-green-500 text-green-700' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium transition-colors duration-200`}
+          <Link
+            to="/about"
+            className={`${
+              location.pathname === "/about"
+                ? "bg-green-50 border-green-500 text-green-700"
+                : "border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800"
+            } block pl-3 pr-4 py-2 border-l-4 text-base font-medium transition-colors duration-200`}
           >
             About
           </Link>
-          <Link 
-            to="/contact" 
-            className={`${location.pathname === '/contact' ? 'bg-green-50 border-green-500 text-green-700' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium transition-colors duration-200`}
+          <Link
+            to="/contact"
+            className={`${
+              location.pathname === "/contact"
+                ? "bg-green-50 border-green-500 text-green-700"
+                : "border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800"
+            } block pl-3 pr-4 py-2 border-l-4 text-base font-medium transition-colors duration-200`}
           >
             Contact
           </Link>
-          <Link 
-            to="/dashboard/startup" 
-            className={`${location.pathname === '/dashboard/startup' ? 'bg-green-50 border-green-500 text-green-700' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium transition-colors duration-200`}
+          <Link
+            to="/dashboard"
+            className={`${
+              location.pathname === "/dashboard"
+                ? "text-green-600"
+                : "text-gray-700 hover:text-green-600"
+            } block px-3 py-2 rounded-md text-base font-medium`}
           >
-            Startup Dashboard
+            Dashboard
           </Link>
-          <Link 
-            to="/dashboard/investor" 
-            className={`${location.pathname === '/dashboard/investor' ? 'bg-green-50 border-green-500 text-green-700' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium transition-colors duration-200`}
-          >
-            Investor Dashboard
-          </Link>
-          <Link 
-            to="/login" 
+          <Link
+            to="/login"
             className="block w-full text-center px-4 py-2 bg-green-600 border border-transparent rounded-md shadow-sm text-base font-medium text-white hover:bg-green-700 transition-colors duration-200 my-3 mx-2"
           >
             Login

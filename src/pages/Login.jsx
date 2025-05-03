@@ -1,14 +1,31 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
+  const navigate = useNavigate();
+  const { signInUser } = useAuth();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Login attempt with:', { email, password });
-    // Handle login logic here
+    setErrorMsg('');
+
+    const { success, accountType, error } = await signInUser(email, password);
+
+    if (!success) {
+      setErrorMsg(error?.message || 'Login failed');
+    } else {
+      if (accountType === 'startup') {
+        navigate('/dashboard');
+      } else if (accountType === 'investor') {
+        navigate('/dashboard');
+      } else {
+        setErrorMsg('Unknown account type.');
+      }
+    }
   };
 
   return (
@@ -23,6 +40,11 @@ const Login = () => {
             </Link>
           </p>
         </div>
+
+        {errorMsg && (
+          <div className="text-red-500 text-sm text-center">{errorMsg}</div>
+        )}
+
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
             <div>

@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // useNavigate for redirection
+import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../lib/supabaseClient';
 
 const Register = () => {
+  const navigate = useNavigate();
+  const {signUpNewUser, loading } = useAuth();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -9,6 +13,10 @@ const Register = () => {
     confirmPassword: '',
     accountType: 'startup',
   });
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -18,10 +26,53 @@ const Register = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Registration data:', formData);
-    // Handle registration logic here
+
+    const { name, email, password, confirmPassword, accountType } = formData;
+
+    if (password !== confirmPassword) {
+      console.error('Passwords do not match');
+      return;
+    }
+
+    try {
+      const { success, error } = await signUpNewUser(email, password, name, accountType);
+
+      if (success) {
+        // ✅ Fetch account type from profiles table
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('account_type')
+          .eq('id', success.id)
+          .single();
+
+        if (profileError) {
+          console.error('Error fetching account type:', profileError.message);
+          return;
+        }
+
+        if (profile.account_type === 'startup') {
+          navigate('/dashboard');
+        } else if (profile.account_type === 'investor') {
+          navigate('/dashboard');
+        } else {
+          console.error('Unknown account type');
+        }
+      } else {
+        console.error('Error signing up:', error);
+      }
+    } catch (error) {
+      console.error('Error during registration:', error);
+    } finally {
+      setFormData({
+        name: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        accountType: 'startup',
+      });
+    }
   };
 
   return (
@@ -39,9 +90,7 @@ const Register = () => {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
-              <label htmlFor="name" className="sr-only">
-                Full Name
-              </label>
+              <label htmlFor="name" className="sr-only">Full Name</label>
               <input
                 id="name"
                 name="name"
@@ -55,9 +104,7 @@ const Register = () => {
               />
             </div>
             <div>
-              <label htmlFor="email-address" className="sr-only">
-                Email address
-              </label>
+              <label htmlFor="email-address" className="sr-only">Email address</label>
               <input
                 id="email-address"
                 name="email"
@@ -71,9 +118,7 @@ const Register = () => {
               />
             </div>
             <div>
-              <label htmlFor="password" className="sr-only">
-                Password
-              </label>
+              <label htmlFor="password" className="sr-only">Password</label>
               <input
                 id="password"
                 name="password"
@@ -87,9 +132,7 @@ const Register = () => {
               />
             </div>
             <div>
-              <label htmlFor="confirmPassword" className="sr-only">
-                Confirm Password
-              </label>
+              <label htmlFor="confirmPassword" className="sr-only">Confirm Password</label>
               <input
                 id="confirmPassword"
                 name="confirmPassword"
@@ -103,9 +146,7 @@ const Register = () => {
               />
             </div>
             <div>
-              <label htmlFor="accountType" className="sr-only">
-                Account Type
-              </label>
+              <label htmlFor="accountType" className="sr-only">Account Type</label>
               <select
                 id="accountType"
                 name="accountType"
