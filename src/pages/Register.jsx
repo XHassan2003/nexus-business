@@ -1,25 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserPlus, Mail, Lock, User, ArrowRight, AlertCircle, Loader2 } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../lib/supabaseClient';
 
 const Register = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [accountType, setAccountType] = useState('startup');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [errorMsg, setErrorMsg] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [isAnimated, setIsAnimated] = useState(false);
   const navigate = useNavigate();
+  const { signUpNewUser, loading } = useAuth();
+  const [errorMsg, setErrorMsg] = useState('');
+  const [isAnimated, setIsAnimated] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    accountType: 'startup',
+  });
 
   useEffect(() => {
     setIsAnimated(true);
   }, []);
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    setErrorMsg('');
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
+
+    const { name, email, password, confirmPassword, accountType } = formData;
 
     if (password !== confirmPassword) {
       setErrorMsg('Passwords do not match');
@@ -31,20 +43,41 @@ const Register = () => {
       return;
     }
 
-    setIsLoading(true);
-
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      navigate('/login');
+      const { success, error } = await signUpNewUser(email, password, name, accountType);
+
+      if (success) {
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('account_type')
+          .eq('id', success.id)
+          .single();
+
+        if (profileError) {
+          setErrorMsg('Error fetching account type: ' + profileError.message);
+          return;
+        }
+
+        navigate('/dashboard');
+      } else {
+        setErrorMsg(error?.message || 'Registration failed');
+      }
     } catch (error) {
-      setErrorMsg('Registration failed. Please try again.');
-    } finally {
-      setIsLoading(false);
+      setErrorMsg('An unexpected error occurred');
+      console.error('Error during registration:', error);
     }
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <Loader2 className="h-8 w-8 animate-spin text-green-600" />
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 py-6 px-4  sm:px-6 lg:px-8">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 m-2 px-4 sm:px-6 lg:px-8">
       <div
         className={`max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg transition-all duration-500 transform ${
           isAnimated ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
@@ -67,12 +100,7 @@ const Register = () => {
           </div>
         )}
 
-        <form
-          onSubmit={handleSubmit}
-          className={`mt-8 space-y-6 transition-all duration-500 ${
-            isAnimated ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-          }`}
-        >
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div className="relative">
               <label htmlFor="account-type" className="block text-sm font-medium text-gray-700 mb-1">
@@ -82,22 +110,22 @@ const Register = () => {
                 <button
                   type="button"
                   className={`py-2 px-4 text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${
-                    accountType === 'startup'
+                    formData.accountType === 'startup'
                       ? 'bg-green-600 text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
-                  onClick={() => setAccountType('startup')}
+                  onClick={() => handleChange({ target: { name: 'accountType', value: 'startup' } })}
                 >
                   Startup
                 </button>
                 <button
                   type="button"
                   className={`py-2 px-4 text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${
-                    accountType === 'investor'
+                    formData.accountType === 'investor'
                       ? 'bg-green-600 text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
-                  onClick={() => setAccountType('investor')}
+                  onClick={() => handleChange({ target: { name: 'accountType', value: 'investor' } })}
                 >
                   Investor
                 </button>
@@ -120,14 +148,14 @@ const Register = () => {
                   required
                   className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 sm:text-sm"
                   placeholder="John Doe"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  value={formData.name}
+                  onChange={handleChange}
                 />
               </div>
             </div>
 
             <div className="relative">
-              <label htmlFor="email-address" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                 Email address
               </label>
               <div className="relative">
@@ -135,15 +163,15 @@ const Register = () => {
                   <Mail className="h-5 w-5 text-gray-400" />
                 </div>
                 <input
-                  id="email-address"
+                  id="email"
                   name="email"
                   type="email"
                   autoComplete="email"
                   required
                   className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 sm:text-sm"
                   placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={formData.email}
+                  onChange={handleChange}
                 />
               </div>
             </div>
@@ -163,16 +191,16 @@ const Register = () => {
                   autoComplete="new-password"
                   required
                   className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 sm:text-sm"
-                  placeholder="••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  value={formData.password}
+                  onChange={handleChange}
                 />
               </div>
-              <p className="mt-1 text-xs text-gray-500">Must be at least 6 characters long</p>
+              <p className="mt-1 text-xs text-gray-500">Must be at least 8 characters long</p>
             </div>
 
             <div className="relative">
-              <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
                 Confirm Password
               </label>
               <div className="relative">
@@ -180,15 +208,15 @@ const Register = () => {
                   <Lock className="h-5 w-5 text-gray-400" />
                 </div>
                 <input
-                  id="confirm-password"
-                  name="confirm-password"
+                  id="confirmPassword"
+                  name="confirmPassword"
                   type="password"
                   autoComplete="new-password"
                   required
                   className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 sm:text-sm"
-                  placeholder="••••••"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="••••••••"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
                 />
               </div>
             </div>
@@ -197,10 +225,10 @@ const Register = () => {
           <div>
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={loading}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              {isLoading ? (
+              {loading ? (
                 <Loader2 className="h-5 w-5 animate-spin" />
               ) : (
                 <>

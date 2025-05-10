@@ -9,8 +9,7 @@ import {
   Users, 
   Award, 
   ArrowLeft,
-  Globe,
-  CheckCircle
+  Calendar
 } from 'lucide-react';
 
 // Mock data for investor details
@@ -55,7 +54,7 @@ const InvestorDetail = () => {
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
-        <Link to="/" className="absolute top-4 left-4 text-white bg-black/30 hover:bg-black/50 p-2 rounded-full transition-colors duration-200">
+        <Link to="/Dashboard" className="absolute top-4 left-4 text-white bg-black/30 hover:bg-black/50 p-2 rounded-full transition-colors duration-200">
           <ArrowLeft className="h-5 w-5" />
         </Link>
       </div>
