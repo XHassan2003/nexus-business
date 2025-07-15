@@ -1,3 +1,4 @@
+// ... (imports remain same)
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserPlus, Mail, Lock, User, ArrowRight, AlertCircle, Loader2 } from 'lucide-react';
@@ -79,12 +80,12 @@ const Register = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 m-2 px-4 sm:px-6 lg:px-8">
       <div
-        className={`max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg transition-all duration-500 transform ${
+        className={`max-w-md w-full space-y-8 bg-white p-8 rounded-2xl shadow-2xl transition-all duration-700 transform ${
           isAnimated ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-        }`}
+        } hover:rotate-[0.5deg] hover:scale-[1.01] hover:shadow-green-200`}
       >
         <div className="text-center">
-          <div className="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-green-100 mb-4">
+          <div className="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-green-100 mb-4 shadow-md hover:scale-110 transform transition-transform duration-300">
             <UserPlus className="h-6 w-6 text-green-600" />
           </div>
           <h2 className="mt-2 text-3xl font-extrabold text-gray-900 tracking-tight">Create an account</h2>
@@ -102,131 +103,66 @@ const Register = () => {
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
+
+            {/* Account Type Buttons */}
             <div className="relative">
-              <label htmlFor="account-type" className="block text-sm font-medium text-gray-700 mb-1">
-                Account Type
-              </label>
+              <label htmlFor="account-type" className="block text-sm font-medium text-gray-700 mb-1">Account Type</label>
               <div className="grid grid-cols-2 gap-3">
-                <button
-                  type="button"
-                  className={`py-2 px-4 text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${
-                    formData.accountType === 'startup'
-                      ? 'bg-green-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                  onClick={() => handleChange({ target: { name: 'accountType', value: 'startup' } })}
-                >
-                  Startup
-                </button>
-                <button
-                  type="button"
-                  className={`py-2 px-4 text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${
-                    formData.accountType === 'investor'
-                      ? 'bg-green-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                  onClick={() => handleChange({ target: { name: 'accountType', value: 'investor' } })}
-                >
-                  Investor
-                </button>
+                {['startup', 'investor'].map((type) => (
+                  <button
+                    key={type}
+                    type="button"
+                    className={`py-2 px-4 text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transform hover:scale-105 ${
+                      formData.accountType === type
+                        ? 'bg-green-600 text-white'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                    onClick={() => handleChange({ target: { name: 'accountType', value: type } })}
+                  >
+                    {type.charAt(0).toUpperCase() + type.slice(1)}
+                  </button>
+                ))}
               </div>
             </div>
 
-            <div className="relative">
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                Full Name
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <User className="h-5 w-5 text-gray-400" />
+            {/* Input Fields */}
+            {[
+              { id: 'name', label: 'Full Name', icon: <User />, type: 'text', placeholder: 'John Doe' },
+              { id: 'email', label: 'Email address', icon: <Mail />, type: 'email', placeholder: 'you@example.com' },
+              { id: 'password', label: 'Password', icon: <Lock />, type: 'password', placeholder: '••••••••' },
+              { id: 'confirmPassword', label: 'Confirm Password', icon: <Lock />, type: 'password', placeholder: '••••••••' }
+            ].map(({ id, label, icon, type, placeholder }) => (
+              <div className="relative" key={id}>
+                <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    {icon}
+                  </div>
+                  <input
+                    id={id}
+                    name={id}
+                    type={type}
+                    required
+                    autoComplete={id}
+                    className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 transition-all duration-200 sm:text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transform focus:scale-[1.01]"
+                    placeholder={placeholder}
+                    value={formData[id]}
+                    onChange={handleChange}
+                  />
                 </div>
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  autoComplete="name"
-                  required
-                  className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 sm:text-sm"
-                  placeholder="John Doe"
-                  value={formData.name}
-                  onChange={handleChange}
-                />
+                {id === 'password' && (
+                  <p className="mt-1 text-xs text-gray-500">Must be at least 8 characters long</p>
+                )}
               </div>
-            </div>
-
-            <div className="relative">
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                Email address
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 sm:text-sm"
-                  placeholder="you@example.com"
-                  value={formData.email}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-
-            <div className="relative">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                Password
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="new-password"
-                  required
-                  className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 sm:text-sm"
-                  placeholder="••••••••"
-                  value={formData.password}
-                  onChange={handleChange}
-                />
-              </div>
-              <p className="mt-1 text-xs text-gray-500">Must be at least 8 characters long</p>
-            </div>
-
-            <div className="relative">
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
-                Confirm Password
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type="password"
-                  autoComplete="new-password"
-                  required
-                  className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 sm:text-sm"
-                  placeholder="••••••••"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
+            ))}
           </div>
 
+          {/* Submit Button */}
           <div>
             <button
               type="submit"
               disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed"
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-xl text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <Loader2 className="h-5 w-5 animate-spin" />

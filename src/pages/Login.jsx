@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Mail, Lock, ArrowRight, AlertCircle, Loader2 } from 'lucide-react';
@@ -9,11 +9,114 @@ const Login = () => {
   const [errorMsg, setErrorMsg] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [isAnimated, setIsAnimated] = useState(false);
+  const [voicePlayed, setVoicePlayed] = useState(false); // Added for voice control
+  const cardRef = useRef(null);
   const navigate = useNavigate();
   const { signInUser, isLoading } = useAuth();
 
+  // AI Voice Greeting Effect - PROFESSIONAL VOICE ADDED HERE
+  useEffect(() => {
+    const playWelcomeVoice = () => {
+      if (voicePlayed || !window.speechSynthesis) return;
+      
+      try {
+        // Get all available voices
+        const voices = window.speechSynthesis.getVoices();
+        
+        // Find professional voices (prefer Google or natural-sounding voices)
+        const professionalVoices = voices.filter(voice => 
+          voice.name.includes('Google') || 
+          voice.name.includes('Samantha') ||
+          voice.name.includes('Daniel') ||
+          voice.name.includes('Karen') ||
+          voice.name.includes('Microsoft David')
+        );
+        
+        // Select best available professional voice
+        const selectedVoice = professionalVoices.length > 0 
+          ? professionalVoices[0] 
+          : voices.length > 0 ? voices[0] : null;
+        
+        if (selectedVoice) {
+          // Create speech utterance
+          const utterance = new SpeechSynthesisUtterance(
+            "Welcome back sir. Please login and enter your profile."
+          );
+          
+          // Configure professional voice settings
+          utterance.voice = selectedVoice;
+          utterance.rate = 0.95;  // Slightly slower for professional tone
+          utterance.pitch = 1.0;  // Normal pitch
+          utterance.volume = 0.8;  // Not too loud
+          
+          // Add natural pauses for professional delivery
+          utterance.text = "Welcome back sir. || Please login | and enter your profile.";
+          
+          // Speak after short delay for better UX
+          setTimeout(() => {
+            window.speechSynthesis.speak(utterance);
+            setVoicePlayed(true);
+          }, 1500);
+        }
+      } catch (error) {
+        console.error("Voice error:", error);
+      }
+    };
+
+    // Handle voices loading asynchronously
+    if (window.speechSynthesis) {
+      const voices = window.speechSynthesis.getVoices();
+      if (voices.length > 0) {
+        playWelcomeVoice();
+      } else {
+        window.speechSynthesis.onvoiceschanged = playWelcomeVoice;
+      }
+    }
+
+    // Cleanup function
+    return () => {
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.onvoiceschanged = null;
+      }
+    };
+  }, [voicePlayed]);
+
+  // Existing mouse effect for 3D card
   useEffect(() => {
     setIsAnimated(true);
+    
+    const handleMouseMove = (e) => {
+      if (!cardRef.current) return;
+      
+      const card = cardRef.current;
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      
+      const rotateY = (x - centerX) / 25;
+      const rotateX = (centerY - y) / 25;
+      
+      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+    };
+    
+    const handleMouseLeave = () => {
+      if (cardRef.current) {
+        cardRef.current.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+      }
+    };
+    
+    const card = cardRef.current;
+    card.addEventListener('mousemove', handleMouseMove);
+    card.addEventListener('mouseleave', handleMouseLeave);
+    
+    return () => {
+      card.removeEventListener('mousemove', handleMouseMove);
+      card.removeEventListener('mouseleave', handleMouseLeave);
+    };
   }, []);
 
   const handleSubmit = async (e) => {
@@ -48,24 +151,62 @@ const Login = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 via-cyan-50 to-gray-50 p-4 overflow-hidden">
+      {/* Floating bubbles background */}
+      <div className="absolute inset-0 overflow-hidden">
+        {[...Array(15)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute rounded-full opacity-10 animate-float"
+            style={{
+              background: `radial-gradient(circle, ${i % 3 === 0 ? '#10b981' : i % 3 === 1 ? '#0ea5e9' : '#8b5cf6'}, transparent)`,
+              width: `${Math.random() * 100 + 50}px`,
+              height: `${Math.random() * 100 + 50}px`,
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 5}s`,
+              animationDuration: `${Math.random() * 20 + 20}s`
+            }}
+          />
+        ))}
+      </div>
+
       <div 
-        className={`max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg transition-all duration-500 transform ${
-          isAnimated ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-        }`}
+        ref={cardRef}
+        className={`max-w-md w-full bg-white p-10 rounded-2xl shadow-2xl transition-all duration-700 ${isAnimated ? 'opacity-100 scale-100' : 'opacity-0 scale-95'} 
+        border border-white/80 backdrop-blur-sm bg-gradient-to-br from-white to-gray-50
+        transform-gpu`}
+        style={{
+          boxShadow: '0 25px 50px -12px rgba(16, 185, 129, 0.25), 0 0 15px rgba(16, 185, 129, 0.1)',
+          transformStyle: 'preserve-3d',
+          willChange: 'transform'
+        }}
       >
-        <div className="text-center">
-          <div className="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-green-100 mb-4">
-            <Mail className="h-6 w-6 text-green-600" />
-          </div>
-          <h2 className="mt-2 text-3xl font-extrabold text-gray-900 tracking-tight">Welcome back</h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+        {/* Decorative elements */}
+        <div className="absolute -top-4 -right-4 w-16 h-16 rounded-full bg-green-400/10 blur-xl"></div>
+        <div className="absolute -bottom-4 -left-4 w-24 h-24 rounded-full bg-cyan-400/10 blur-xl"></div>
+        
+        <div 
+          className="text-center mb-8 relative"
+          style={{ transform: 'translateZ(30px)' }}
+        >
+          <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-16 h-16 rounded-full bg-green-500/10 blur-lg"></div>
+          <h2 className="text-3xl font-extrabold text-gray-900 mb-2 relative">
+            <span className="bg-gradient-to-r from-green-600 to-cyan-600 bg-clip-text text-transparent">
+              Welcome back
+            </span>
+          </h2>
+          <p className="text-gray-500 mt-4">
             Please sign in to your account
           </p>
         </div>
 
         {errorMsg && (
-          <div className="flex items-center p-4 text-sm text-red-800 rounded-lg bg-red-50 animate-fade-in" role="alert">
+          <div 
+            className="flex items-center p-4 mb-6 text-sm text-red-800 rounded-xl bg-red-50 border border-red-100 animate-fade-in shadow-inner"
+            role="alert"
+            style={{ transform: 'translateZ(20px)' }}
+          >
             <AlertCircle className="inline w-5 h-5 mr-2 flex-shrink-0" />
             <span className="font-medium">{errorMsg}</span>
           </div>
@@ -73,18 +214,22 @@ const Login = () => {
 
         <form 
           onSubmit={handleSubmit}
-          className={`mt-8 space-y-6 transition-all duration-500 ${
-            isAnimated ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-          }`}
+          className={`space-y-6 transition-all duration-700 ${isAnimated ? 'opacity-100' : 'opacity-0'}`}
         >
-          <div className="space-y-4">
-            <div className="relative">
-              <label htmlFor="email-address" className="block text-sm font-medium text-gray-700 mb-1">
+          <div className="space-y-5">
+            <div 
+              className="relative group"
+              style={{ transformStyle: 'preserve-3d' }}
+            >
+              <label 
+                htmlFor="email-address" 
+                className="block text-sm font-medium text-gray-700 mb-1 ml-1 transition-all duration-300 group-hover:text-green-600 group-focus-within:text-green-600"
+              >
                 Email address
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400" />
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none transition-all duration-300 group-hover:scale-110">
+                  <Mail className="h-5 w-5 text-gray-400 group-hover:text-green-500 group-focus-within:text-green-500 transition-colors" />
                 </div>
                 <input
                   id="email-address"
@@ -92,21 +237,29 @@ const Login = () => {
                   type="email"
                   autoComplete="email"
                   required
-                  className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 sm:text-sm"
+                  className="appearance-none block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 hover:shadow-md hover:border-green-300 bg-white/70 backdrop-blur-sm group-hover:bg-white"
                   placeholder="you@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  style={{ transform: 'translateZ(10px)' }}
                 />
+                <div className="absolute inset-0 rounded-xl bg-green-500/5 -z-10 group-hover:opacity-100 opacity-0 blur-md transition-opacity duration-300"></div>
               </div>
             </div>
             
-            <div className="relative">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+            <div 
+              className="relative group"
+              style={{ transformStyle: 'preserve-3d' }}
+            >
+              <label 
+                htmlFor="password" 
+                className="block text-sm font-medium text-gray-700 mb-1 ml-1 transition-all duration-300 group-hover:text-green-600 group-focus-within:text-green-600"
+              >
                 Password
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none transition-all duration-300 group-hover:scale-110">
+                  <Lock className="h-5 w-5 text-gray-400 group-hover:text-green-500 group-focus-within:text-green-500 transition-colors" />
                 </div>
                 <input
                   id="password"
@@ -114,66 +267,95 @@ const Login = () => {
                   type="password"
                   autoComplete="current-password"
                   required
-                  className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 sm:text-sm"
+                  className="appearance-none block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 hover:shadow-md hover:border-green-300 bg-white/70 backdrop-blur-sm group-hover:bg-white"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  style={{ transform: 'translateZ(10px)' }}
                 />
+                <div className="absolute inset-0 rounded-xl bg-green-500/5 -z-10 group-hover:opacity-100 opacity-0 blur-md transition-opacity duration-300"></div>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-                className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded transition-colors"
-              />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
+          <div 
+            className="flex items-center justify-between"
+            style={{ transform: 'translateZ(15px)' }}
+          >
+            <div className="flex items-center group">
+              <div className="relative flex items-center">
+                <input
+                  id="remember-me"
+                  name="remember-me"
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded transition-all duration-300 group-hover:scale-110 appearance-none checked:bg-green-500 checked:border-transparent focus:outline-none"
+                />
+                <div className="absolute inset-0 bg-green-500/10 rounded group-hover:opacity-30 opacity-0 transition-opacity -z-10"></div>
+              </div>
+              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700 group-hover:text-gray-900 transition-colors">
                 Remember me
               </label>
             </div>
 
             <div className="text-sm">
-              <Link to="/forgot-password" className="font-medium text-green-600 hover:text-green-500 transition-colors">
-                Forgot your password?
+              <Link 
+                to="/forgot-password" 
+                className="font-medium text-green-600 hover:text-green-500 transition-all duration-300 hover:underline hover:underline-offset-4 group"
+              >
+                <span className="group-hover:translate-x-0.5 transition-transform inline-block">Forgot password?</span>
               </Link>
             </div>
           </div>
 
-          <div>
+          <div
+            style={{ transformStyle: 'preserve-3d' }}
+          >
             <button
               type="submit"
               disabled={isLoading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300 ease-in-out shadow-lg hover:shadow-xl active:scale-[0.98] overflow-hidden"
+              style={{ transform: 'translateZ(20px)' }}
             >
-              {isLoading ? (
-                <Loader2 className="h-5 w-5 animate-spin" />
-              ) : (
-                <>
-                  Sign in
-                  <span className="absolute right-3 inset-y-0 flex items-center pl-3 transition-transform group-hover:translate-x-1">
-                    <ArrowRight className="h-4 w-4" />
-                  </span>
-                </>
-              )}
+              {/* Animated background */}
+              <span className="absolute inset-0 bg-gradient-to-r from-green-600 to-green-500 group-hover:from-green-700 group-hover:to-green-600 transition-all duration-500"></span>
+              <span className="absolute inset-0 bg-gradient-to-r from-cyan-600 to-green-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
+              
+              {/* Shine effect */}
+              <span className="absolute inset-0 overflow-hidden">
+                <span className="absolute -inset-y-full -left-20 w-40 bg-gradient-to-r from-white/30 via-white/0 to-white/30 opacity-40 group-hover:animate-shine"></span>
+              </span>
+              
+              {/* Button content */}
+              <span className="relative z-10 flex items-center">
+                {isLoading ? (
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                ) : (
+                  <>
+                    <span>Sign in</span>
+                    <span className="ml-2 transition-all duration-300 group-hover:translate-x-1">
+                      <ArrowRight className="h-4 w-4" />
+                    </span>
+                  </>
+                )}
+              </span>
             </button>
           </div>
         </form>
 
         <div 
-          className={`mt-6 text-center transition-all duration-500 delay-200 ${
-            isAnimated ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-          }`}
+          className={`mt-8 text-center transition-all duration-700 delay-200 ${isAnimated ? 'opacity-100' : 'opacity-0'}`}
+          style={{ transform: 'translateZ(15px)' }}
         >
           <p className="text-sm text-gray-600">
             Don't have an account?{' '}
-            <Link to="/register" className="font-medium text-green-600 hover:text-green-500 transition-colors">
-              Create one now
+            <Link 
+              to="/register" 
+              className="font-medium text-green-600 hover:text-green-500 transition-all duration-300 hover:underline hover:underline-offset-4 group inline-flex items-center"
+            >
+              <span className="group-hover:translate-x-0.5 transition-transform">Create one now</span>
+              <ArrowRight className="h-4 w-4 ml-1 transition-transform group-hover:translate-x-1" />
             </Link>
           </p>
         </div>
