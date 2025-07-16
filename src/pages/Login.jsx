@@ -206,7 +206,10 @@ const Login = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 via-cyan-50 to-gray-50 p-4 overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-tr from-white via-green-50 to-green-100 flex items-center justify-center p-4">
+
+      
+      
       {/* Voice status panel */}
      
       
@@ -214,24 +217,7 @@ const Login = () => {
      
 
       {/* Floating bubbles background */}
-      <div className="absolute inset-0 overflow-hidden">
-        {[...Array(15)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute rounded-full opacity-10 animate-float"
-            style={{
-              background: `radial-gradient(circle, ${i % 3 === 0 ? '#10b981' : i % 3 === 1 ? '#0ea5e9' : '#8b5cf6'}, transparent)`,
-              width: `${Math.random() * 100 + 50}px`,
-              height: `${Math.random() * 100 + 50}px`,
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${Math.random() * 20 + 20}s`
-            }}
-          />
-        ))}
-      </div>
-
+     
       <div 
         ref={cardRef}
         className={`max-w-md w-full bg-white p-10 rounded-2xl shadow-2xl transition-all duration-700 ${isAnimated ? 'opacity-100 scale-100' : 'opacity-0 scale-95'} 
@@ -253,11 +239,11 @@ const Login = () => {
         >
           <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-16 h-16 rounded-full bg-green-500/10 blur-lg"></div>
           <h2 className="text-3xl font-extrabold text-gray-900 mb-2 relative">
-            <span className="bg-gradient-to-r from-green-600 to-cyan-600 bg-clip-text text-transparent">
+            <span className="text-3xl font-bold text-gray-800 tracking-tight">
               Welcome back
             </span>
           </h2>
-          <p className="text-gray-500 mt-4">
+          <p className="text-sm text-green-700 mt-2">
             Please sign in to your account
           </p>
         </div>
@@ -395,7 +381,7 @@ const Login = () => {
                 ) : (
                   <>
                     <span>Sign in</span>
-                    <span className="ml-2 transition-all duration-300 group-hover:translate-x-1">
+                    <span className="flex justify-center items-center gap-2">
                       <ArrowRight className="h-4 w-4" />
                     </span>
                   </>
