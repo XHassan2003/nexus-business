@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Mail, Lock, ArrowRight, AlertCircle, Loader2 } from 'lucide-react';
+import { Mail, Lock, ArrowRight, AlertCircle, Loader2, Volume2 } from 'lucide-react';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -9,71 +9,103 @@ const Login = () => {
   const [errorMsg, setErrorMsg] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [isAnimated, setIsAnimated] = useState(false);
-  const [voicePlayed, setVoicePlayed] = useState(false); // Added for voice control
+  const [voicePlayed, setVoicePlayed] = useState(false);
+  const [voiceStatus, setVoiceStatus] = useState('Initializing voice system...');
   const cardRef = useRef(null);
   const navigate = useNavigate();
   const { signInUser, isLoading } = useAuth();
 
-  // AI Voice Greeting Effect - PROFESSIONAL VOICE ADDED HERE
+  // AI Voice Greeting Effect with debugging
   useEffect(() => {
     const playWelcomeVoice = () => {
-      if (voicePlayed || !window.speechSynthesis) return;
+      if (voicePlayed) return;
       
       try {
-        // Get all available voices
+        if (!window.speechSynthesis) {
+          setVoiceStatus('Browser does not support speech synthesis');
+          return;
+        }
+
         const voices = window.speechSynthesis.getVoices();
+        setVoiceStatus(`Found ${voices.length} voices`);
         
-        // Find professional voices (prefer Google or natural-sounding voices)
+        // Debug: Log all available voices
+        console.log('Available voices:', voices);
+
         const professionalVoices = voices.filter(voice => 
           voice.name.includes('Google') || 
           voice.name.includes('Samantha') ||
           voice.name.includes('Daniel') ||
           voice.name.includes('Karen') ||
-          voice.name.includes('Microsoft David')
+          voice.name.includes('Microsoft David') ||
+          voice.lang.includes('en')
         );
         
-        // Select best available professional voice
-        const selectedVoice = professionalVoices.length > 0 
-          ? professionalVoices[0] 
-          : voices.length > 0 ? voices[0] : null;
+        const selectedVoice = professionalVoices[0] || voices[0];
         
         if (selectedVoice) {
-          // Create speech utterance
+          setVoiceStatus(`Selected voice: ${selectedVoice.name}`);
+          
           const utterance = new SpeechSynthesisUtterance(
             "Welcome back sir. Please login and enter your profile."
           );
           
-          // Configure professional voice settings
           utterance.voice = selectedVoice;
-          utterance.rate = 0.95;  // Slightly slower for professional tone
-          utterance.pitch = 1.0;  // Normal pitch
-          utterance.volume = 0.8;  // Not too loud
+          utterance.rate = 0.95;
+          utterance.pitch = 1.0;
+          utterance.volume = 0.8;
           
-          // Add natural pauses for professional delivery
-          utterance.text = "Welcome back sir. || Please login | and enter your profile.";
+          // Add event listeners for debugging
+          utterance.onstart = () => {
+            setVoiceStatus('Voice started');
+            console.log('Voice playback started');
+          };
           
-          // Speak after short delay for better UX
-          setTimeout(() => {
-            window.speechSynthesis.speak(utterance);
+          utterance.onend = () => {
+            setVoiceStatus('Voice completed');
             setVoicePlayed(true);
+          };
+          
+          utterance.onerror = (event) => {
+            setVoiceStatus(`Error: ${event.error}`);
+            console.error('Voice error:', event);
+          };
+
+          // Speak after short delay
+          setTimeout(() => {
+            try {
+              window.speechSynthesis.speak(utterance);
+            } catch (e) {
+              setVoiceStatus(`Speak error: ${e.message}`);
+              console.error('Speak error:', e);
+            }
           }, 1500);
+        } else {
+          setVoiceStatus('No suitable voices found');
         }
       } catch (error) {
+        setVoiceStatus(`Error: ${error.message}`);
         console.error("Voice error:", error);
       }
     };
 
-    // Handle voices loading asynchronously
+    // Voice loading logic
     if (window.speechSynthesis) {
       const voices = window.speechSynthesis.getVoices();
       if (voices.length > 0) {
         playWelcomeVoice();
       } else {
-        window.speechSynthesis.onvoiceschanged = playWelcomeVoice;
+        setVoiceStatus('Waiting for voices to load...');
+        window.speechSynthesis.onvoiceschanged = () => {
+          setVoiceStatus('Voices loaded');
+          playWelcomeVoice();
+        };
       }
+    } else {
+      setVoiceStatus('Speech synthesis not supported');
     }
 
-    // Cleanup function
+    // Cleanup
     return () => {
       if (window.speechSynthesis) {
         window.speechSynthesis.cancel();
@@ -82,7 +114,29 @@ const Login = () => {
     };
   }, [voicePlayed]);
 
-  // Existing mouse effect for 3D card
+  // Test voice function
+  const testVoice = () => {
+    if (!window.speechSynthesis) {
+      setVoiceStatus('Speech synthesis not supported');
+      return;
+    }
+    
+    try {
+      const utterance = new SpeechSynthesisUtterance("Testing voice system");
+      utterance.volume = 0.8;
+      utterance.rate = 1.0;
+      
+      utterance.onstart = () => setVoiceStatus('Test voice started');
+      utterance.onend = () => setVoiceStatus('Test voice completed');
+      utterance.onerror = (e) => setVoiceStatus(`Test error: ${e.error}`);
+      
+      window.speechSynthesis.speak(utterance);
+    } catch (error) {
+      setVoiceStatus(`Test error: ${error.message}`);
+    }
+  };
+
+  // Existing mouse effect for 3D card (unchanged)
   useEffect(() => {
     setIsAnimated(true);
     
@@ -119,6 +173,7 @@ const Login = () => {
     };
   }, []);
 
+  // Existing form handling functions (unchanged)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
@@ -152,6 +207,12 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 via-cyan-50 to-gray-50 p-4 overflow-hidden">
+      {/* Voice status panel */}
+     
+      
+      {/* Voice test button */}
+     
+
       {/* Floating bubbles background */}
       <div className="absolute inset-0 overflow-hidden">
         {[...Array(15)].map((_, i) => (
