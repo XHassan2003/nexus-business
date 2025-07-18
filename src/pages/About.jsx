@@ -48,11 +48,14 @@ const About = () => {
 
         {/* Stats Section */}
         <div className="mt-20">
-          <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-3xl font-extrabold text-green-600">{stat.value}</div>
-                <div className="mt-2 text-base font-medium text-gray-500">{stat.label}</div>
+              <div
+                key={index}
+                className="bg-green-50 border border-green-200 rounded-xl p-6 shadow-md transition-shadow duration-300 hover:shadow-xl text-center"
+              >
+                <div className="text-3xl font-bold text-green-800">{stat.value}</div>
+                <div className="mt-2 text-base font-medium text-green-600">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -102,10 +105,16 @@ const About = () => {
         <div className="mt-20 text-center">
           <h2 className="text-3xl font-bold text-gray-900 mb-8">Ready to Get Started?</h2>
           <div className="inline-flex space-x-4">
-            <a href="/register" className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700">
+            <a
+              href="/register"
+              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700"
+            >
               Join as Startup
             </a>
-            <a href="/register" className="inline-flex items-center px-6 py-3 border border-green-600 text-base font-medium rounded-md text-green-600 bg-white hover:bg-green-50">
+            <a
+              href="/register"
+              className="inline-flex items-center px-6 py-3 border border-green-600 text-base font-medium rounded-md text-green-600 bg-white hover:bg-green-50"
+            >
               Join as Investor
             </a>
           </div>
