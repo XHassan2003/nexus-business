@@ -11,6 +11,10 @@ import Register from "./pages/Register";
 import { AuthProvider } from "./contexts/AuthContext";
 import InvestorDetail from "./pages/InvestorDetail";
 import StartupDetail from "./pages/StartupDetail";
+import Chatbot from "./components/Chatbot";
+
+
+ 
 
 function App() {
   return (
@@ -18,6 +22,8 @@ function App() {
       <Router>
         <div className="flex flex-col min-h-screen">
           <Navbar />
+          <Chatbot/>
+           {/* Floating chatbot button on all pages */}
           <main className="flex-grow bg-gray-100">
             <Routes>
               <Route path="/" element={<Home />} />
@@ -28,6 +34,10 @@ function App() {
               <Route path="/startup/:id" element={<StartupDetail />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              
+                
+
+
             </Routes>
           </main>
           <Footer />
