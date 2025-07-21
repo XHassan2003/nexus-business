@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 
 export default function GallerySlider() {
   const successStories = [
@@ -30,54 +31,59 @@ export default function GallerySlider() {
   ];
 
   return (
-    <section className="py-16 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-        <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
-            <span className="block text-green-600">Success Stories</span>
+    <section className="py-20 bg-gradient-to-br from-gray-100 via-white to-gray-100">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center mb-14">
+          <h1 className="text-5xl font-extrabold text-gray-900 mb-4 tracking-tight">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-emerald-600">
+              Success Stories
+            </span>
           </h1>
-          <p className="mt-4 text-lg text-gray-600">
+          <p className="text-gray-600 text-lg">
             Discover how startups achieved their goals through our platform
           </p>
         </div>
-        
+
         <div className="relative">
           <div className="overflow-x-auto hide-scrollbar">
-            <div className="flex gap-6 pb-4 snap-x snap-mandatory">
+            <div className="flex gap-8 pb-4 snap-x snap-mandatory px-2">
               {successStories.map((story, idx) => (
-                <div
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ type: 'spring', stiffness: 300 }}
                   key={idx}
-                  className="min-w-[300px] md:min-w-[400px] snap-center shrink-0 bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
+                  className="min-w-[300px] md:min-w-[400px] snap-center shrink-0 bg-white rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 group"
                 >
-                  <img
-                    src={story.image}
-                    alt={story.title}
-                    className="w-full h-48 object-cover"
-                  />
+                  <div className="relative">
+                    <img
+                      src={story.image}
+                      alt={story.title}
+                      className="w-full h-56 object-cover transform group-hover:scale-105 transition duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-500 rounded-t-2xl"></div>
+                  </div>
                   <div className="p-6">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    <h3 className="text-2xl font-bold text-gray-800 group-hover:text-green-600 transition duration-300">
                       {story.title}
                     </h3>
-                    <p className="text-gray-600">
-                      {story.description}
-                    </p>
+                    <p className="text-gray-600 mt-2">{story.description}</p>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
         </div>
-
-        <style jsx>{`
-          .hide-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-          }
-          .hide-scrollbar::-webkit-scrollbar {
-            display: none;
-          }
-        `}</style>
       </div>
+
+      <style jsx>{`
+        .hide-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
     </section>
   );
 }
