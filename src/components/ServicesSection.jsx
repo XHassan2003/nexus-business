@@ -10,28 +10,28 @@ import {
 
 const newsLogos = [
   {
-    alt: 'Insider',
-    src: 'data:image/png;base64,...', // Replace with full base64
+    alt: 'CNN',
+    src: '/CNN.svg',
   },
   {
     alt: 'BBC',
-    src: 'data:image/png;base64,...',
+    src: '/BBC.svg',
   },
   {
-    alt: 'Financial Times',
-    src: 'data:image/png;base64,...',
+    alt: 'Al Jazeera',
+    src: '/Al Jazeera.svg',
   },
   {
-    alt: 'The Times',
-    src: 'data:image/png;base64,...',
+    alt: 'Reuters',
+    src: '/Reuters.svg',
   },
   {
-    alt: 'The Guardian',
-    src: 'data:image/png;base64,...',
+    alt: 'CNBC',
+    src: '/CNBC.svg',
   },
   {
     alt: 'Entrepreneur',
-    src: 'data:image/png;base64,...',
+    src: '/Entrepreneur.svg',
   },
 ];
 
@@ -109,17 +109,13 @@ const ServicesSection = () => {
         </div>
       </div>
 
-      {/* === News Logos with Company Names === */}
+      {/* === News Logos === */}
       <div className="py-12 bg-white border-t border-gray-200">
-      <h2 className="text-2xl sm:text-3xl font-bold text-center text-green-700 mb-8">
-  Find us in the news
-</h2>
-
-
+        <h2 className="text-2xl sm:text-3xl font-bold text-center text-green-700 mb-8">
+          Find us in the news
+        </h2>
         <div className="overflow-hidden relative group">
-          <div
-            className="flex space-x-12 animate-[scroll_25s_linear_infinite] group-hover:[animation-play-state:paused]"
-          >
+          <div className="flex space-x-12 animate-[scroll_25s_linear_infinite] group-hover:[animation-play-state:paused]">
             {newsLogos.concat(newsLogos).map((logo, index) => (
               <div
                 key={index}
@@ -135,14 +131,56 @@ const ServicesSection = () => {
             ))}
           </div>
         </div>
-
-        {/* Inline keyframe animation for smooth scroll */}
         <style>{`
           @keyframes scroll {
             0% { transform: translateX(0%); }
             100% { transform: translateX(-50%); }
           }
         `}</style>
+      </div>
+
+      {/* === Investment Tools Section === */}
+      <div className="py-16 bg-green-50 border-t border-green-200">
+        <h2 className="text-3xl font-bold text-center text-green-700 mb-10">
+          Tools to Suit Your Investing Style
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-7xl mx-auto px-6">
+          {/* MarketSurge */}
+          <div className="bg-white rounded-2xl shadow-md p-6 hover:shadow-lg transition">
+            <img src="/investor 1.png" alt="MarketSurge" className="mb-4 rounded-lg" />
+            <h3 className="text-xl font-semibold text-green-700 mb-2">MarketSurge</h3>
+            <p className="text-green-800 mb-4">
+              Make your stock research more efficient. Get all the tools you need to find stocks, research their potential, and decide when to buy and sell.
+            </p>
+            <a href="/marketsurge" className="text-white bg-green-600 hover:bg-green-700 px-4 py-2 rounded-md inline-block text-sm font-medium">
+              Try Now
+            </a>
+          </div>
+
+          {/* Leaderboard */}
+          <div className="bg-white rounded-2xl shadow-md p-6 hover:shadow-lg transition">
+            <img src="/Leaderboard.png" alt="Leaderboard" className="mb-4 rounded-lg" />
+            <h3 className="text-xl font-semibold text-green-700 mb-2">Leaderboard</h3>
+            <p className="text-green-800 mb-4">
+              With Leaderboard, IBD’s experts give you a model portfolio of the best 10–15 stocks to buy, plus full trading plans for each pick.
+            </p>
+            <a href="/leaderboard" className="text-white bg-green-600 hover:bg-green-700 px-4 py-2 rounded-md inline-block text-sm font-medium">
+              Try Now
+            </a>
+          </div>
+
+          {/* MarketDiem */}
+          <div className="bg-white rounded-2xl shadow-md p-6 hover:shadow-lg transition">
+            <img src="/MarketDiem.png" alt="MarketDiem" className="mb-4 rounded-lg" />
+            <h3 className="text-xl font-semibold text-green-700 mb-2">MarketDiem</h3>
+            <p className="text-green-800 mb-4">
+              MarketDiem is a daily newsletter that gives you trade ideas for stocks and options plus market analysis, all in a 5-minute read.
+            </p>
+            <a href="/marketdiem" className="text-white bg-green-600 hover:bg-green-700 px-4 py-2 rounded-md inline-block text-sm font-medium">
+              Try Now
+            </a>
+          </div>
+        </div>
       </div>
     </section>
   );
