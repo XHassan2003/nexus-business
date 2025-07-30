@@ -12,12 +12,15 @@ import { AuthProvider } from "./contexts/AuthContext";
 import InvestorDetail from "./pages/InvestorDetail";
 import StartupDetail from "./pages/StartupDetail";
 import Chatbot from "./components/Chatbot";
+import Marketsurge from "./components/Marketsurge";
+
 
 
  
 
 function App() {
   return (
+     
     <AuthProvider>
       <Router>
         <div className="flex flex-col min-h-screen">
@@ -34,7 +37,7 @@ function App() {
               <Route path="/startup/:id" element={<StartupDetail />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              
+              <Route path="/Marketsurge" element={<Marketsurge />} />
                 
 
 
@@ -44,6 +47,7 @@ function App() {
         </div>
       </Router>
     </AuthProvider>
+   
   );
 }
 
