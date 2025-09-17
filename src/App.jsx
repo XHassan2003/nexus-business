@@ -16,6 +16,7 @@ import Marketsurge from "./components/Marketsurge";
 
 
 
+
  
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/dashboard" element={<Dashboard />} />
+             
               <Route path="/investor/:id" element={<InvestorDetail />} />
               <Route path="/startup/:id" element={<StartupDetail />} />
               <Route path="/login" element={<Login />} />

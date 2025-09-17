@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, User, Briefcase, Phone, Home, LogIn, UserPlus, ChevronDown } from 'lucide-react';
+import { link } from "framer-motion/client";
 
 const Navbar = () => {
   const location = useLocation();
@@ -31,7 +32,14 @@ const Navbar = () => {
     { path: "/", label: "Home", icon: <Home size={16} /> },
     { path: "/about", label: "About", icon: <Briefcase size={16} /> },
     { path: "/contact", label: "Contact", icon: <Phone size={16} /> },
-    { path: "/dashboard", label: "Dashboard", icon: <User size={16} /> },
+    { path: "/dashboard", label: "Dashboard", icon: <User size={16} /> }
+   
+    
+    
+    
+    
+    
+ 
   ];
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);

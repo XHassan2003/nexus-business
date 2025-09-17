@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
 import { Mail, Lock, ArrowRight, AlertCircle, Loader2, Volume2 } from 'lucide-react';
 
 const Login = () => {
@@ -11,11 +10,23 @@ const Login = () => {
   const [isAnimated, setIsAnimated] = useState(false);
   const [voicePlayed, setVoicePlayed] = useState(false);
   const [voiceStatus, setVoiceStatus] = useState('Initializing voice system...');
+  const [isLoading, setIsLoading] = useState(false);
   const cardRef = useRef(null);
   const navigate = useNavigate();
-  const { signInUser, isLoading } = useAuth();
 
-  // AI Voice Greeting Effect with debugging
+  // Initialize demo accounts if none exist
+  useEffect(() => {
+    const existingUsers = localStorage.getItem('demoUsers');
+    if (!existingUsers) {
+      const demoUsers = [
+        { email: 'demo@example.com', password: 'password123', accountType: 'startup' },
+        { email: 'investor@example.com', password: 'password123', accountType: 'investor' }
+      ];
+      localStorage.setItem('demoUsers', JSON.stringify(demoUsers));
+    }
+  }, []);
+
+  // AI Voice Greeting Effect (unchanged)
   useEffect(() => {
     const playWelcomeVoice = () => {
       if (voicePlayed) return;
@@ -114,7 +125,7 @@ const Login = () => {
     };
   }, [voicePlayed]);
 
-  // Test voice function
+  // Test voice function (unchanged)
   const testVoice = () => {
     if (!window.speechSynthesis) {
       setVoiceStatus('Speech synthesis not supported');
@@ -136,7 +147,7 @@ const Login = () => {
     }
   };
 
-  // Existing mouse effect for 3D card (unchanged)
+  // 3D card effect (unchanged)
   useEffect(() => {
     setIsAnimated(true);
     
@@ -173,30 +184,54 @@ const Login = () => {
     };
   }, []);
 
-  // Existing form handling functions (unchanged)
+  // Client-side login handler
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
+    setIsLoading(true);
 
-    const { success, accountType, error } = await signInUser(email, password);
-
-    if (!success) {
-      setErrorMsg(error?.message || 'Login failed');
-    } else {
-      if (rememberMe) {
-        localStorage.setItem('rememberedEmail', email);
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 800));
+    
+    try {
+      // Get users from localStorage
+      const users = JSON.parse(localStorage.getItem('demoUsers') || '[]');
+      
+      // Find user with matching credentials
+      const user = users.find(u => u.email === email && u.password === password);
+      
+      if (user) {
+        // Login successful
+        if (rememberMe) {
+          localStorage.setItem('rememberedEmail', email);
+        } else {
+          localStorage.removeItem('rememberedEmail');
+        }
+        
+        // Store current session
+        localStorage.setItem('currentUser', JSON.stringify({
+          email: user.email,
+          accountType: user.accountType
+        }));
+        
+        // Navigate based on account type
+        if (user.accountType === 'startup' || user.accountType === 'investor') {
+          navigate('/dashboard');
+        } else {
+          setErrorMsg('Unknown account type.');
+        }
       } else {
-        localStorage.removeItem('rememberedEmail');
+        setErrorMsg('Invalid email or password.');
       }
-
-      if (accountType === 'startup' || accountType === 'investor') {
-        navigate('/dashboard');
-      } else {
-        setErrorMsg('Unknown account type.');
-      }
+    } catch (error) {
+      setErrorMsg('Login failed. Please try again.');
+      console.error('Login error:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  // Check for remembered email (unchanged)
   useEffect(() => {
     const savedEmail = localStorage.getItem('rememberedEmail');
     if (savedEmail) {
@@ -207,17 +242,41 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-tr from-white via-green-50 to-green-100 flex items-center justify-center p-4">
-
-      
-      
       {/* Voice status panel */}
-     
+      <div className="fixed top-4 right-4 bg-black/80 text-white text-xs p-2 rounded-md opacity-70 hover:opacity-100 transition-opacity">
+        <div className="flex items-center gap-2">
+          <Volume2 size={14} />
+          <span>{voiceStatus}</span>
+        </div>
+      </div>
       
       {/* Voice test button */}
-     
+      <button 
+        onClick={testVoice}
+        className="fixed bottom-4 right-4 bg-green-500 text-white p-2 rounded-full shadow-md hover:bg-green-600 transition-colors"
+        title="Test voice system"
+      >
+        <Volume2 size={18} />
+      </button>
 
       {/* Floating bubbles background */}
-     
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        {[...Array(15)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute rounded-full bg-green-200/20"
+            style={{
+              width: Math.random() * 60 + 20,
+              height: Math.random() * 60 + 20,
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              animation: `float ${Math.random() * 15 + 10}s infinite ease-in-out`,
+              animationDelay: `${Math.random() * 5}s`,
+            }}
+          />
+        ))}
+      </div>
+      
       <div 
         ref={cardRef}
         className={`max-w-md w-full bg-white p-10 rounded-2xl shadow-2xl transition-all duration-700 ${isAnimated ? 'opacity-100 scale-100' : 'opacity-0 scale-95'} 
@@ -406,7 +465,27 @@ const Login = () => {
             </Link>
           </p>
         </div>
+
+        {/* Demo credentials hint */}
+        <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200 text-xs text-gray-600">
+          <p className="font-medium mb-1">Demo credentials:</p>
+          <p>Startup: demo@example.com / password123</p>
+          <p>Investor: investor@example.com / password123</p>
+        </div>
       </div>
+
+      {/* CSS for floating animation */}
+      <style>
+        {`
+          @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+          }
+          @keyframes shine {
+            to { left: 100%; }
+          }
+        `}
+      </style>
     </div>
   );
 };
