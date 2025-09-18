@@ -32,7 +32,7 @@ const Navbar = () => {
     { path: "/", label: "Home", icon: <Home size={16} /> },
     { path: "/about", label: "About", icon: <Briefcase size={16} /> },
     { path: "/contact", label: "Contact", icon: <Phone size={16} /> },
-    { path: "/dashboard", label: "Dashboard", icon: <User size={16} /> }
+    { path: "/InvestorDashboard", label: "Dashboard", icon: <User size={16} /> }
    
     
     
@@ -182,7 +182,7 @@ const Navbar = () => {
                     >
                       <div className="py-1 bg-gradient-to-b from-white to-slate-50">
                         <Link
-                          to="/login"
+                          to="/Login"
                           className="flex items-center px-4 py-3 text-slate-700 hover:bg-emerald-50 group transition-colors"
                         >
                           <LogIn className="h-5 w-5 text-emerald-600 mr-3 group-hover:scale-110 transition-transform" />

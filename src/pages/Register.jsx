@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { UserPlus, Mail, Lock, User, ArrowRight, AlertCircle, Loader2 } from 'lucide-react';
+import { UserPlus, Mail, Lock, User, ArrowRight, AlertCircle, Loader2, Building2, Briefcase } from 'lucide-react';
 
 const Register = () => {
   const navigate = useNavigate();
   const [errorMsg, setErrorMsg] = useState('');
   const [isAnimated, setIsAnimated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [registrationStep, setRegistrationStep] = useState('form'); // 'form' or 'verify'
+  const [registrationStep, setRegistrationStep] = useState('form');
   const [pendingUser, setPendingUser] = useState(null);
-  const voiceRef = useRef(null);
+ 
 
   const [formData, setFormData] = useState({
     name: '',
@@ -22,81 +22,9 @@ const Register = () => {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const otpInputRefs = useRef([]);
 
-  // Initialize demo accounts if none exist
-  useEffect(() => {
-    const existingUsers = localStorage.getItem('demoUsers');
-    if (!existingUsers) {
-      const demoUsers = [
-        { 
-          id: 1, 
-          name: 'Demo User', 
-          email: 'demo@example.com', 
-          password: 'password123', 
-          accountType: 'startup',
-          createdAt: new Date().toISOString(),
-          verified: true
-        },
-        { 
-          id: 2, 
-          name: 'Investor User', 
-          email: 'investor@example.com', 
-          password: 'password123', 
-          accountType: 'investor',
-          createdAt: new Date().toISOString(),
-          verified: true
-        }
-      ];
-      localStorage.setItem('demoUsers', JSON.stringify(demoUsers));
-    }
-  }, []);
-
   useEffect(() => {
     setIsAnimated(true);
-
-    const timer = setTimeout(() => {
-      if (speechSynthesis.getVoices().length === 0) {
-        speechSynthesis.onvoiceschanged = () => {
-          playWelcomeVoice();
-        };
-      } else {
-        playWelcomeVoice();
-      }
-    }, 500);
-
-    return () => {
-      clearTimeout(timer);
-      if (voiceRef.current) {
-        window.speechSynthesis.cancel();
-      }
-    };
   }, []);
-
-  const playWelcomeVoice = () => {
-    const message = new SpeechSynthesisUtterance(
-      "Welcome to Nexus Business. Let's begin your premium journey by creating an account. Your future starts here."
-    );
-
-    message.rate = 0.9;
-    message.pitch = 1.05;
-    message.volume = 1;
-
-    const voices = speechSynthesis.getVoices();
-    const preferredVoices = [
-      'Google UK English Female',
-      'Google US English',
-      'Microsoft Zira Desktop',
-      'Microsoft David Desktop',
-      'Samantha',
-    ];
-
-    const vipVoice = voices.find(voice => preferredVoices.includes(voice.name));
-    if (vipVoice) {
-      message.voice = vipVoice;
-    }
-
-    voiceRef.current = message;
-    speechSynthesis.speak(message);
-  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -105,25 +33,20 @@ const Register = () => {
   };
 
   const generateOTP = () => {
-    // Generate a 6-digit OTP
     return Math.floor(100000 + Math.random() * 900000).toString();
   };
 
   const simulateEmailSend = (email, otpCode) => {
-    // In a real app, this would be an API call to your backend
     console.log(`Sending OTP ${otpCode} to ${email}`);
     
-    // Store the OTP in localStorage for verification
     const otpData = {
       code: otpCode,
       email: email,
-      expiresAt: Date.now() + 10 * 60 * 1000, // OTP expires in 10 minutes
+      expiresAt: Date.now() + 10 * 60 * 1000,
     };
     
     localStorage.setItem(`otp_${email}`, JSON.stringify(otpData));
-    
-    // For demo purposes, we'll show the OTP in an alert
-    alert(`DEMO: Your verification code is ${otpCode}. In a real app, this would be sent to your email.`);
+    alert(`DEMO: Your verification code is ${otpCode}. Check your email in a real application.`);
   };
 
   const handleSubmit = async (e) => {
@@ -133,7 +56,6 @@ const Register = () => {
 
     const { name, email, password, confirmPassword, accountType } = formData;
 
-    // Validation
     if (password !== confirmPassword) {
       setErrorMsg('Passwords do not match');
       setIsLoading(false);
@@ -152,14 +74,11 @@ const Register = () => {
       return;
     }
 
-    // Simulate network delay
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     try {
-      // Get existing users
-      const existingUsers = JSON.parse(localStorage.getItem('demoUsers') || '[]');
+      const existingUsers = JSON.parse(localStorage.getItem('users') || '[]');
       
-      // Check if email already exists
       const emailExists = existingUsers.some(user => user.email === email);
       if (emailExists) {
         setErrorMsg('Email already registered');
@@ -167,11 +86,9 @@ const Register = () => {
         return;
       }
       
-      // Generate OTP and simulate sending it
       const otpCode = generateOTP();
       simulateEmailSend(email, otpCode);
       
-      // Store user data temporarily (without saving to users yet)
       setPendingUser({
         name,
         email,
@@ -179,24 +96,21 @@ const Register = () => {
         accountType,
       });
       
-      // Move to verification step
       setRegistrationStep('verify');
     } catch (error) {
       setErrorMsg('Registration failed. Please try again.');
-      console.error('Registration error:', error);
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleOtpChange = (index, value) => {
-    if (!/^\d*$/.test(value)) return; // Only allow numbers
+    if (!/^\d*$/.test(value)) return;
     
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
     
-    // Auto-focus to next input
     if (value && index < 5) {
       otpInputRefs.current[index + 1].focus();
     }
@@ -204,7 +118,6 @@ const Register = () => {
 
   const handleOtpKeyDown = (index, e) => {
     if (e.key === 'Backspace' && !otp[index] && index > 0) {
-      // Move focus to previous input on backspace
       otpInputRefs.current[index - 1].focus();
     }
   };
@@ -219,7 +132,6 @@ const Register = () => {
       return;
     }
     
-    // Check if OTP is valid
     const otpData = JSON.parse(localStorage.getItem(`otp_${pendingUser.email}`) || '{}');
     
     if (!otpData.code || !otpData.expiresAt) {
@@ -238,7 +150,6 @@ const Register = () => {
       return;
     }
     
-    // OTP is valid - complete registration
     completeRegistration();
   };
 
@@ -246,10 +157,8 @@ const Register = () => {
     setIsLoading(true);
     
     try {
-      // Get existing users
-      const existingUsers = JSON.parse(localStorage.getItem('demoUsers') || '[]');
+      const existingUsers = JSON.parse(localStorage.getItem('users') || '[]');
       
-      // Create new user
       const newUser = {
         id: Date.now(),
         name: pendingUser.name,
@@ -260,25 +169,25 @@ const Register = () => {
         verified: true
       };
       
-      // Save to localStorage
       existingUsers.push(newUser);
-      localStorage.setItem('demoUsers', JSON.stringify(existingUsers));
+      localStorage.setItem('users', JSON.stringify(existingUsers));
       
-      // Set as current user
       localStorage.setItem('currentUser', JSON.stringify({
         email: newUser.email,
         name: newUser.name,
         accountType: newUser.accountType
       }));
       
-      // Clean up OTP
       localStorage.removeItem(`otp_${pendingUser.email}`);
       
-      // Navigate to dashboard
-      navigate('/dashboard');
+      // Redirect based on account type
+      if (newUser.accountType === 'startup') {
+        navigate('/StartupDashboard');
+      } else {
+        navigate('/InvestorDashboard');
+      }
     } catch (error) {
       setErrorMsg('Registration failed. Please try again.');
-      console.error('Registration error:', error);
     } finally {
       setIsLoading(false);
     }
@@ -290,9 +199,9 @@ const Register = () => {
   };
 
   if (registrationStep === 'verify') {
+    
     return (
       <div className="min-h-screen bg-gradient-to-tr from-white via-green-50 to-green-100 flex items-center justify-center p-4">
-        {/* Floating bubbles background */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
           {[...Array(15)].map((_, i) => (
             <div
@@ -386,7 +295,6 @@ const Register = () => {
           </p>
         </div>
 
-        {/* CSS for floating animation */}
         <style>
           {`
             @keyframes float {
@@ -401,7 +309,6 @@ const Register = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-tr from-white via-green-50 to-green-100 flex items-center justify-center p-4">
-      {/* Floating bubbles background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         {[...Array(15)].map((_, i) => (
           <div
@@ -427,7 +334,7 @@ const Register = () => {
             <UserPlus className="text-green-800 w-6 h-6 group-hover:rotate-12 transition-all duration-300" />
           </div>
           <h2 className="text-3xl font-bold text-gray-800 tracking-tight">Create Your Account</h2>
-          <p className="text-sm text-green-700 mt-2">Join Nexus Business and start your premium journey</p>
+          <p className="text-sm text-green-700 mt-2">Join our platform and start your journey</p>
         </div>
 
         {errorMsg && (
@@ -439,20 +346,30 @@ const Register = () => {
 
         <form className="mt-6 space-y-5" onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-3">
-            {['startup', 'investor'].map(type => (
-              <button
-                key={type}
-                type="button"
-                onClick={() => handleChange({ target: { name: 'accountType', value: type } })}
-                className={`group py-2 px-4 text-sm font-semibold rounded-lg border transition-all duration-300 transform ${
-                  formData.accountType === type
-                    ? 'bg-green-600 text-white shadow-md scale-105'
-                    : 'bg-white text-green-700 border-green-300 hover:border-green-500 hover:bg-green-50 hover:shadow-lg'
-                }`}
-              >
-                {type.charAt(0).toUpperCase() + type.slice(1)}
-              </button>
-            ))}
+            <button
+              type="button"
+              onClick={() => handleChange({ target: { name: 'accountType', value: 'startup' } })}
+              className={`group py-3 px-4 text-sm font-semibold rounded-lg border transition-all duration-300 transform flex flex-col items-center justify-center ${
+                formData.accountType === 'startup'
+                  ? 'bg-green-600 text-white shadow-md scale-105'
+                  : 'bg-white text-green-700 border-green-300 hover:border-green-500 hover:bg-green-50 hover:shadow-lg'
+              }`}
+            >
+              <Building2 className="w-5 h-5 mb-1" />
+              <span>Startup</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleChange({ target: { name: 'accountType', value: 'investor' } })}
+              className={`group py-3 px-4 text-sm font-semibold rounded-lg border transition-all duration-300 transform flex flex-col items-center justify-center ${
+                formData.accountType === 'investor'
+                  ? 'bg-green-600 text-white shadow-md scale-105'
+                  : 'bg-white text-green-700 border-green-300 hover:border-green-500 hover:bg-green-50 hover:shadow-lg'
+              }`}
+            >
+              <Briefcase className="w-5 h-5 mb-1" />
+              <span>Investor</span>
+            </button>
           </div>
 
           {[ 
@@ -509,7 +426,6 @@ const Register = () => {
         </p>
       </div>
 
-      {/* CSS for floating animation */}
       <style>
         {`
           @keyframes float {

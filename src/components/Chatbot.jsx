@@ -3,9 +3,8 @@ import React, { useState, useRef, useEffect } from 'react';
 // Sample Q&A database
 const qaDatabase = [
   { keywords: ['hello', 'hi', 'hey'], answer: 'Hello! How can I help you today?' },
-   { keywords: ['hello', 'hi', 'hey'], answer: 'Hello! How can I help you today?' },
-  { keywords: ['login', 'sign in',], answer: 'enter your email and password to log in.' },
-  { keywords: ['signup',], answer: 'To sign up, click on the Sign Up button and fill the form..' },
+  { keywords: ['login', 'sign in'], answer: 'Enter your email and password to log in.' },
+  { keywords: ['signup', 'register'], answer: 'To sign up, click on the Sign Up button and fill the form.' },
   { keywords: ['bye', 'goodbye', 'see you'], answer: 'Goodbye! Have a great day!' },
   { keywords: ['thanks', 'thank you', 'appreciate'], answer: 'You\'re welcome! Glad I could help.' },
   { keywords: ['hours', 'open', 'close'], answer: 'We are open from 9 AM to 6 PM, Monday to Friday.' },
@@ -116,7 +115,7 @@ const ChatbotWidget = () => {
       {/* Chatbot Icon */}
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="w-14 h-14 bg-indigo-600 rounded-full shadow-lg flex items-center justify-center text-white hover:bg-indigo-700 focus:outline-none transition-all duration-300"
+        className="w-14 h-14 bg-gradient-to-r from-green-600 to-emerald-600 rounded-full shadow-lg flex items-center justify-center text-white hover:from-green-700 hover:to-emerald-700 focus:outline-none transition-all duration-300 transform hover:scale-105"
       >
         {isOpen ? (
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -131,14 +130,14 @@ const ChatbotWidget = () => {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="absolute bottom-16 right-0 w-80 md:w-96 bg-white rounded-lg shadow-xl overflow-hidden border border-gray-200">
+        <div className="absolute bottom-16 right-0 w-80 md:w-96 bg-white rounded-xl shadow-xl overflow-hidden border border-emerald-200">
           {/* Chat header */}
-          <div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-3 text-white flex items-center">
-            <div className="w-3 h-3 rounded-full bg-green-400 mr-2 animate-pulse"></div>
-            <h2 className="text-lg font-semibold">AI Assistant</h2>
+          <div className="bg-gradient-to-r from-emerald-700 to-green-600 px-4 py-3 text-white flex items-center">
+            <div className="w-3 h-3 rounded-full bg-white mr-2 animate-pulse"></div>
+            <h2 className="text-lg font-semibold">Uniiqr Assistant</h2>
             <button 
               onClick={() => setIsOpen(false)}
-              className="ml-auto p-1 rounded hover:bg-indigo-500 transition"
+              className="ml-auto p-1 rounded-full hover:bg-emerald-700 transition"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -147,21 +146,21 @@ const ChatbotWidget = () => {
           </div>
           
           {/* Messages container */}
-          <div className="h-80 overflow-y-auto bg-gray-50 p-4">
+          <div className="h-80 overflow-y-auto bg-gradient-to-b from-emerald-50 to-white p-4">
             {messages.map((message, index) => (
               <div 
                 key={index} 
                 className={`flex mb-4 ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div 
-                  className={`max-w-xs rounded-lg px-4 py-2 ${message.sender === 'user' 
-                    ? 'bg-indigo-500 text-white rounded-br-none' 
-                    : 'bg-gray-200 text-gray-800 rounded-bl-none'
+                  className={`max-w-xs rounded-2xl px-4 py-2 ${message.sender === 'user' 
+                    ? 'bg-gradient-to-r from-emerald-600 to-green-500 text-white rounded-br-none' 
+                    : 'bg-white text-gray-800 rounded-bl-none border border-emerald-100 shadow-sm'
                   }`}
                 >
                   <p className="text-sm">{message.text}</p>
                   <span 
-                    className={`text-xs block mt-1 ${message.sender === 'user' ? 'text-indigo-200' : 'text-gray-500'}`}
+                    className={`text-xs block mt-1 ${message.sender === 'user' ? 'text-emerald-100' : 'text-emerald-600'}`}
                   >
                     {formatTime(message.timestamp)}
                   </span>
@@ -172,8 +171,8 @@ const ChatbotWidget = () => {
           </div>
           
           {/* Input area */}
-          <div className="border-t border-gray-200 p-3 bg-white">
-            <div className="flex">
+          <div className="border-t border-emerald-100 p-3 bg-white">
+            <div className="flex rounded-lg border border-emerald-200 focus-within:ring-2 focus-within:ring-emerald-500 focus-within:border-emerald-500 overflow-hidden">
               <input
                 ref={inputRef}
                 type="text"
@@ -181,24 +180,43 @@ const ChatbotWidget = () => {
                 onChange={(e) => setInputText(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Type your message here..."
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+                className="flex-1 px-4 py-3 focus:outline-none text-sm"
               />
               <button
                 onClick={handleSend}
                 disabled={inputText.trim() === ''}
-                className="bg-indigo-600 text-white px-4 py-2 rounded-r-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                className="bg-gradient-to-r from-emerald-600 to-green-500 text-white px-4 py-2 hover:from-emerald-700 hover:to-green-600 focus:outline-none transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
               </button>
             </div>
-            <p className="text-xs text-gray-500 mt-2 text-center">
-              Type your question and press Enter
+            <p className="text-xs text-emerald-600 mt-2 text-center">
+              Ask me anything about our services
             </p>
           </div>
         </div>
       )}
+
+      {/* Add custom styles for the green theme */}
+      <style jsx>{`
+        /* Custom scrollbar for the chat window */
+        .overflow-y-auto::-webkit-scrollbar {
+          width: 6px;
+        }
+        .overflow-y-auto::-webkit-scrollbar-track {
+          background: #f1f1f1;
+          border-radius: 10px;
+        }
+        .overflow-y-auto::-webkit-scrollbar-thumb {
+          background: #059669;
+          border-radius: 10px;
+        }
+        .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+          background: #047857;
+        }
+      `}</style>
     </div>
   );
 };

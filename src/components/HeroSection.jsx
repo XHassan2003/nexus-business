@@ -2,6 +2,12 @@ import React, { useEffect } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 
+// Sample data - in real app this would come from API/JSON
+const websiteData = {
+  heroBackgroundImage: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80",
+  // ... other data properties
+};
+
 const cards = [
   {
     title: 'Startup Journey',
@@ -29,7 +35,7 @@ const cards = [
   },
 ];
 
-const AnimatedText = ({ text, className }) => {
+const AnimatedText = ({ text, className, delay = 0 }) => {
   const controls = useAnimation();
   const [ref, inView] = useInView({
     triggerOnce: true,
@@ -48,7 +54,7 @@ const AnimatedText = ({ text, className }) => {
     hidden: { opacity: 0 },
     visible: (i = 1) => ({
       opacity: 1,
-      transition: { staggerChildren: 0.03, delayChildren: 0.04 * i },
+      transition: { staggerChildren: 0.03, delayChildren: 0.04 * i + delay },
     }),
   };
 
@@ -90,12 +96,99 @@ const AnimatedText = ({ text, className }) => {
   );
 };
 
+const FloatingElements = () => {
+  return (
+    <>
+      {/* Animated floating elements */}
+      <motion.div
+        className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-emerald-50/30 blur-3xl"
+        animate={{
+          y: [0, -20, 0],
+          scale: [1, 1.05, 1],
+        }}
+        transition={{
+          duration: 15,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      />
+      <motion.div
+        className="absolute bottom-1/3 right-1/4 w-64 h-64 bg-blue-50/30 rounded-full blur-3xl"
+        animate={{
+          y: [0, 20, 0],
+          scale: [1, 1.05, 1],
+        }}
+        transition={{
+          duration: 12,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 1
+        }}
+      />
+      
+      {/* Geometric elements with animation */}
+      <motion.div
+        className="absolute top-1/3 right-20 w-32 h-32 border-2 border-emerald-100 rounded-full rotate-45"
+        animate={{
+          rotate: [45, 90, 135, 90, 45],
+        }}
+        transition={{
+          duration: 20,
+          repeat: Infinity,
+          ease: "linear"
+        }}
+      />
+      <motion.div
+        className="absolute bottom-1/4 left-20 w-24 h-24 border-2 border-blue-100 rounded-full rotate-12"
+        animate={{
+          rotate: [12, -30, 12],
+        }}
+        transition={{
+          duration: 15,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 2
+        }}
+      />
+      
+      {/* Small floating particles */}
+      {[...Array(8)].map((_, i) => (
+        <motion.div
+          key={i}
+          className={`absolute w-2 h-2 rounded-full ${i % 2 === 0 ? 'bg-emerald-300/40' : 'bg-blue-300/40'}`}
+          style={{
+            top: `${20 + (i * 10)}%`,
+            left: `${10 + (i * 12)}%`,
+          }}
+          animate={{
+            y: [0, -15, 0],
+            opacity: [0.4, 1, 0.4],
+          }}
+          transition={{
+            duration: 4 + i,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: i * 0.5
+          }}
+        />
+      ))}
+    </>
+  );
+};
+
 const Home = () => {
   return (
-    <div className="relative bg-gradient-to-br from-slate-50 to-white overflow-hidden">
+    <div className="relative overflow-hidden">
 
-      {/* Premium Hero Section */}
+      {/* Premium Hero Section with Background Image */}
       <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Background Image with Overlay and Blur */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${websiteData.heroBackgroundImage})` }}
+        ></div>
+        <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
+        
         {/* Luxury Background Pattern */}
         <div className="absolute inset-0">
           {/* Subtle Diamond Grid */}
@@ -103,13 +196,7 @@ const Home = () => {
             <div className="absolute inset-0 [background-size:80px_80px] [background-image:linear-gradient(to_right,transparent_50%,#000_50%),linear-gradient(to_bottom,transparent_50%,#000_50%)] rotate-45"></div>
           </div>
           
-          {/* Geometric Elements */}
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-emerald-50/30 blur-3xl"></div>
-          <div className="absolute bottom-1/3 right-1/4 w-64 h-64 bg-blue-50/30 rounded-full blur-3xl"></div>
-          
-          {/* Metallic Accents */}
-          <div className="absolute top-1/3 right-20 w-32 h-32 border-2 border-emerald-100 rounded-full rotate-45"></div>
-          <div className="absolute bottom-1/4 left-20 w-24 h-24 border-2 border-blue-100 rounded-full rotate-12"></div>
+          <FloatingElements />
         </div>
 
         {/* Content */}
@@ -121,9 +208,9 @@ const Home = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="mb-12"
           >
-            <div className="inline-flex items-center bg-gradient-to-r from-emerald-50 to-blue-50 px-6 py-3 rounded-full border border-slate-200 shadow-sm">
+            <div className="inline-flex items-center bg-gradient-to-r from-emerald-50 to-blue-50 px-6 py-3 rounded-full border border-slate-200 shadow-sm backdrop-blur-md">
               <span className="h-2 w-2 bg-emerald-400 rounded-full mr-3"></span>
-              <span className="text-slate-700 font-medium tracking-wider"> INVESTMENT PLATFORM</span>
+              <span className="text-slate-700 font-medium tracking-wider text-xs">PREMIUM INVESTMENT PLATFORM</span>
             </div>
           </motion.div>
 
@@ -140,6 +227,7 @@ const Home = () => {
                 <AnimatedText 
                   text="Strategic Capital" 
                   className="block bg-gradient-to-r from-emerald-500 to-emerald-600 bg-clip-text text-transparent"
+                  delay={0.3}
                 />
               </div>
             </h1>
@@ -169,10 +257,15 @@ const Home = () => {
               { value: "300+", label: "Premium Startups", accent: "text-blue-500" },
               { value: "120+", label: "Investor Network", accent: "text-indigo-500" }
             ].map((stat, index) => (
-              <div key={index} className="text-center">
+              <motion.div 
+                key={index} 
+                className="text-center"
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              >
                 <div className={`text-4xl font-bold ${stat.accent} mb-2`}>{stat.value}</div>
-                <div className="text-sm text-slate-500 uppercase tracking-wider">{stat.label}</div>
-              </div>
+                <div className="text-sm text-slate-500 uppercase tracking-wider font-medium">{stat.label}</div>
+              </motion.div>
             ))}
           </motion.div>
 
@@ -189,9 +282,9 @@ const Home = () => {
                 boxShadow: "0 10px 25px -5px rgba(16, 185, 129, 0.2)"
               }}
               whileTap={{ scale: 0.98 }}
-              className="px-10 py-4 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-medium rounded-lg shadow-lg transition-all group"
+              className="px-10 py-4 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-medium rounded-lg shadow-lg transition-all group relative overflow-hidden"
             >
-              <div className="flex items-center gap-3">
+              <span className="relative z-10 flex items-center gap-3">
                 <span>Apply as Startup</span>
                 <svg 
                   className="h-5 w-5 transition-transform group-hover:translate-x-1"
@@ -201,7 +294,11 @@ const Home = () => {
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
-              </div>
+              </span>
+              <motion.div 
+                className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-emerald-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                initial={false}
+              />
             </motion.button>
             
             <motion.button
@@ -210,9 +307,9 @@ const Home = () => {
                 boxShadow: "0 10px 25px -5px rgba(15, 118, 110, 0.2)"
               }}
               whileTap={{ scale: 0.98 }}
-              className="px-10 py-4 bg-gradient-to-r from-teal-500 to-teal-600 text-white font-medium rounded-lg shadow-lg transition-all group"
+              className="px-10 py-4 bg-gradient-to-r from-slate-800 to-slate-900 text-white font-medium rounded-lg shadow-lg transition-all group relative overflow-hidden"
             >
-              <div className="flex items-center gap-3">
+              <span className="relative z-10 flex items-center gap-3">
                 <span>Become an Investor</span>
                 <svg 
                   className="h-5 w-5 transition-transform group-hover:translate-x-1"
@@ -222,7 +319,11 @@ const Home = () => {
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
-              </div>
+              </span>
+              <motion.div 
+                className="absolute inset-0 bg-gradient-to-r from-slate-900 to-slate-950 opacity-0 group-hover:opacity-100 transition-opacity"
+                initial={false}
+              />
             </motion.button>
           </motion.div>
         </div>
@@ -231,6 +332,21 @@ const Home = () => {
         <div className="absolute bottom-0 left-0 right-0 h-32 flex items-end">
           <div className="w-full h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent"></div>
         </div>
+        
+        {/* Scroll indicator */}
+        <motion.div 
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          <div className="w-6 h-10 border-2 border-slate-300 rounded-full flex justify-center">
+            <motion.div 
+              className="w-1 h-3 bg-slate-400 rounded-full mt-2"
+              animate={{ opacity: [0, 1, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
+          </div>
+        </motion.div>
       </div>
 
       {/* Premium Cards Section */}
@@ -244,7 +360,7 @@ const Home = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
             >
-              <div className="inline-block bg-slate-800 text-slate-200 px-4 py-1.5 rounded-full text-sm mb-6">
+              <div className="inline-block bg-slate-800 text-slate-200 px-4 py-1.5 rounded-full text-sm mb-6 font-medium tracking-wide">
                 OUR VALUE PROPOSITION
               </div>
               <h2 className="text-4xl font-bold text-slate-900">
@@ -267,15 +383,15 @@ const Home = () => {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.2, duration: 0.8 }}
                 whileHover={{ y: -15 }}
-                className="relative bg-white rounded-xl p-8 shadow-xl hover:shadow-2xl transition-all duration-500 border border-slate-100 group"
+                className="relative bg-white rounded-xl p-8 shadow-xl hover:shadow-2xl transition-all duration-500 border border-slate-100 group overflow-hidden"
               >
-                {/* Card Glow */}
-              
+                {/* Hover effect background */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white to-slate-50 group-hover:from-emerald-50/30 group-hover:to-blue-50/30 transition-all duration-500 z-0"></div>
                 
                 {/* Icon with Luxury Border */}
-                <div className="mb-8">
-                  <div className="inline-block p-3 rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200 shadow-sm">
-                    <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${card.iconColor} flex items-center justify-center`}>
+                <div className="mb-8 relative z-10">
+                  <div className="inline-block p-3 rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200 shadow-sm group-hover:shadow-md transition-shadow">
+                    <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${card.iconColor} flex items-center justify-center shadow-inner`}>
                       <svg
                         className="h-8 w-8 text-white"
                         fill="none"
@@ -289,7 +405,7 @@ const Home = () => {
                 </div>
 
                 {/* Content */}
-                <div>
+                <div className="relative z-10">
                   <h3 className="text-2xl font-bold text-slate-900 mb-4">
                     {card.title}
                   </h3>
@@ -299,17 +415,24 @@ const Home = () => {
                 </div>
 
                 {/* Luxury Divider */}
-                <div className="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent my-6"></div>
+                <div className="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent my-6 relative z-10"></div>
 
-                {/* Learn More */}
-                <div className="flex items-center text-emerald-600 font-medium group">
-                 
-                
+                {/* Learn more link */}
+                <div className="relative z-10 flex items-center text-emerald-500 group-hover:text-emerald-600 transition-colors font-medium">
+                  <span>Learn more</span>
+                  <svg 
+                    className="h-4 w-4 ml-2 transition-transform group-hover:translate-x-1" 
+                    fill="none" 
+                    viewBox="0 0 24 24" 
+                    stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
                 </div>
 
                 {/* Corner Accent */}
                 <div className="absolute top-0 right-0 w-16 h-16 overflow-hidden">
-                  <div className="absolute -top-8 -right-8 w-16 h-16 rotate-45 bg-gradient-to-r from-emerald-400 to-emerald-500"></div>
+                  <div className="absolute -top-8 -right-8 w-16 h-16 rotate-45 bg-gradient-to-r from-emerald-400 to-emerald-500 group-hover:from-emerald-500 group-hover:to-emerald-600 transition-colors"></div>
                 </div>
               </motion.div>
             ))}
@@ -317,19 +440,24 @@ const Home = () => {
 
           {/* Premium CTA */}
           <motion.div
-            className="mt-24 bg-gradient-to-r from-slate-900 to-slate-800 rounded-2xl p-12 text-center"
+            className="mt-24 bg-gradient-to-r from-slate-900 to-slate-800 rounded-2xl p-12 text-center relative overflow-hidden"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.4 }}
           >
-            <h3 className="text-3xl font-bold text-white mb-6">
+            {/* Background pattern */}
+            <div className="absolute inset-0 opacity-10 [mask-image:radial-gradient(ellipse_at_center,white,transparent)]">
+              <div className="absolute inset-0 [background-size:80px_80px] [background-image:linear-gradient(to_right,transparent_50%,#000_50%),linear-gradient(to_bottom,transparent_50%,#000_50%)] rotate-45"></div>
+            </div>
+            
+            <h3 className="text-3xl font-bold text-white mb-6 relative z-10">
               Ready to Join Our Exclusive Network?
             </h3>
-            <p className="text-slate-300 max-w-2xl mx-auto mb-10">
+            <p className="text-slate-300 max-w-2xl mx-auto mb-10 relative z-10">
               Apply today to become part of the premier investment ecosystem connecting exceptional startups with visionary investors.
             </p>
-            <div className="flex justify-center">
+            <div className="flex justify-center relative z-10">
               <motion.button
                 whileHover={{ 
                   scale: 1.05,
@@ -346,13 +474,10 @@ const Home = () => {
       </div>
 
       {/* Luxury Footer */}
-     
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
-         
-         
-        </div>
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
+        {/* Footer content would go here */}
       </div>
-    
+    </div>
   );
 };
 

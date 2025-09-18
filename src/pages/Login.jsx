@@ -1,7 +1,58 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate, Link } from 'react-router-dom';
 import { Mail, Lock, ArrowRight, AlertCircle, Loader2, Volume2 } from 'lucide-react';
 
+const StartupDashboard = () => (
+  <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-8">
+    <div className="max-w-6xl mx-auto">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold text-gray-800">Startup Dashboard</h1>
+        <button className="bg-green-600 text-white px-4 py-2 rounded-lg">Create New Project</button>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white p-6 rounded-xl shadow-md">
+          <h2 className="text-xl font-semibold mb-4">My Projects</h2>
+          <p className="text-gray-600">Manage your startup projects and track progress</p>
+        </div>
+        <div className="bg-white p-6 rounded-xl shadow-md">
+          <h2 className="text-xl font-semibold mb-4">Investor Connections</h2>
+          <p className="text-gray-600">Connect with potential investors for your startup</p>
+        </div>
+        <div className="bg-white p-6 rounded-xl shadow-md">
+          <h2 className="text-xl font-semibold mb-4">Resources</h2>
+          <p className="text-gray-600">Access tools and resources for your startup journey</p>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const InvestorDashboard = () => (
+  <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-8">
+    <div className="max-w-6xl mx-auto">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold text-gray-800">Investor Dashboard</h1>
+        <button className="bg-purple-600 text-white px-4 py-2 rounded-lg">Find Startups</button>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white p-6 rounded-xl shadow-md">
+          <h2 className="text-xl font-semibold mb-4">Portfolio</h2>
+          <p className="text-gray-600">View and manage your investment portfolio</p>
+        </div>
+        <div className="bg-white p-6 rounded-xl shadow-md">
+          <h2 className="text-xl font-semibold mb-4">Startup Matches</h2>
+          <p className="text-gray-600">Discover promising startups that match your criteria</p>
+        </div>
+        <div className="bg-white p-6 rounded-xl shadow-md">
+          <h2 className="text-xl font-semibold mb-4">Market Trends</h2>
+          <p className="text-gray-600">Stay updated with the latest market trends and insights</p>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+// Login Component
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -16,17 +67,33 @@ const Login = () => {
 
   // Initialize demo accounts if none exist
   useEffect(() => {
-    const existingUsers = localStorage.getItem('demoUsers');
+    const existingUsers = localStorage.getItem('users');
     if (!existingUsers) {
       const demoUsers = [
-        { email: 'demo@example.com', password: 'password123', accountType: 'startup' },
-        { email: 'investor@example.com', password: 'password123', accountType: 'investor' }
+        { 
+          id: 1, 
+          name: 'Demo User', 
+          email: 'demo@example.com', 
+          password: 'password123', 
+          accountType: 'startup',
+          createdAt: new Date().toISOString(),
+          verified: true
+        },
+        { 
+          id: 2, 
+          name: 'Investor User', 
+          email: 'investor@example.com', 
+          password: 'password123', 
+          accountType: 'investor',
+          createdAt: new Date().toISOString(),
+          verified: true
+        }
       ];
-      localStorage.setItem('demoUsers', JSON.stringify(demoUsers));
+      localStorage.setItem('users', JSON.stringify(demoUsers));
     }
   }, []);
 
-  // AI Voice Greeting Effect (unchanged)
+  // AI Voice Greeting Effect
   useEffect(() => {
     const playWelcomeVoice = () => {
       if (voicePlayed) return;
@@ -40,9 +107,6 @@ const Login = () => {
         const voices = window.speechSynthesis.getVoices();
         setVoiceStatus(`Found ${voices.length} voices`);
         
-        // Debug: Log all available voices
-        console.log('Available voices:', voices);
-
         const professionalVoices = voices.filter(voice => 
           voice.name.includes('Google') || 
           voice.name.includes('Samantha') ||
@@ -58,7 +122,7 @@ const Login = () => {
           setVoiceStatus(`Selected voice: ${selectedVoice.name}`);
           
           const utterance = new SpeechSynthesisUtterance(
-            "Welcome back sir. Please login and enter your profile."
+            "Welcome back. Please login to access your dashboard."
           );
           
           utterance.voice = selectedVoice;
@@ -66,10 +130,8 @@ const Login = () => {
           utterance.pitch = 1.0;
           utterance.volume = 0.8;
           
-          // Add event listeners for debugging
           utterance.onstart = () => {
             setVoiceStatus('Voice started');
-            console.log('Voice playback started');
           };
           
           utterance.onend = () => {
@@ -79,16 +141,13 @@ const Login = () => {
           
           utterance.onerror = (event) => {
             setVoiceStatus(`Error: ${event.error}`);
-            console.error('Voice error:', event);
           };
 
-          // Speak after short delay
           setTimeout(() => {
             try {
               window.speechSynthesis.speak(utterance);
             } catch (e) {
               setVoiceStatus(`Speak error: ${e.message}`);
-              console.error('Speak error:', e);
             }
           }, 1500);
         } else {
@@ -96,11 +155,9 @@ const Login = () => {
         }
       } catch (error) {
         setVoiceStatus(`Error: ${error.message}`);
-        console.error("Voice error:", error);
       }
     };
 
-    // Voice loading logic
     if (window.speechSynthesis) {
       const voices = window.speechSynthesis.getVoices();
       if (voices.length > 0) {
@@ -116,7 +173,6 @@ const Login = () => {
       setVoiceStatus('Speech synthesis not supported');
     }
 
-    // Cleanup
     return () => {
       if (window.speechSynthesis) {
         window.speechSynthesis.cancel();
@@ -125,7 +181,7 @@ const Login = () => {
     };
   }, [voicePlayed]);
 
-  // Test voice function (unchanged)
+  // Test voice function
   const testVoice = () => {
     if (!window.speechSynthesis) {
       setVoiceStatus('Speech synthesis not supported');
@@ -147,7 +203,7 @@ const Login = () => {
     }
   };
 
-  // 3D card effect (unchanged)
+  // 3D card effect
   useEffect(() => {
     setIsAnimated(true);
     
@@ -184,7 +240,7 @@ const Login = () => {
     };
   }, []);
 
-  // Client-side login handler
+  // Login handler
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
@@ -195,12 +251,19 @@ const Login = () => {
     
     try {
       // Get users from localStorage
-      const users = JSON.parse(localStorage.getItem('demoUsers') || '[]');
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
       
       // Find user with matching credentials
       const user = users.find(u => u.email === email && u.password === password);
       
       if (user) {
+        // Check if user is verified
+        if (!user.verified) {
+          setErrorMsg('Please verify your email before logging in.');
+          setIsLoading(false);
+          return;
+        }
+        
         // Login successful
         if (rememberMe) {
           localStorage.setItem('rememberedEmail', email);
@@ -211,12 +274,15 @@ const Login = () => {
         // Store current session
         localStorage.setItem('currentUser', JSON.stringify({
           email: user.email,
+          name: user.name,
           accountType: user.accountType
         }));
         
         // Navigate based on account type
-        if (user.accountType === 'startup' || user.accountType === 'investor') {
-          navigate('/dashboard');
+        if (user.accountType === 'startup') {
+          navigate('/startup-dashboard');
+        } else if (user.accountType === 'investor') {
+          navigate('/investor-dashboard');
         } else {
           setErrorMsg('Unknown account type.');
         }
@@ -225,13 +291,12 @@ const Login = () => {
       }
     } catch (error) {
       setErrorMsg('Login failed. Please try again.');
-      console.error('Login error:', error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Check for remembered email (unchanged)
+  // Check for remembered email
   useEffect(() => {
     const savedEmail = localStorage.getItem('rememberedEmail');
     if (savedEmail) {
@@ -490,4 +555,21 @@ const Login = () => {
   );
 };
 
-export default Login;
+
+
+// App Component
+const App = () => {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/Login" element={<Login />} />
+        <Route path="/Register" element={<div>Register Page - Implement your registration component here</div>} />
+        <Route path="/StartupDashboard" element={<StartupDashboard />} />
+        <Route path="/InvestorDashboard" element={<InvestorDashboard />} />
+        <Route path="/" element={<Login />} />
+      </Routes>
+    </Router>
+  );
+};
+
+export default App;
