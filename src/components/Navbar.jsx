@@ -1,15 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, User, Briefcase, Phone, Home, LogIn, UserPlus, ChevronDown } from 'lucide-react';
-import { link } from "framer-motion/client";
 
 const Navbar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [hoveredItem, setHoveredItem] = useState(null);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
+  const [isDashboardDropdownOpen, setIsDashboardDropdownOpen] = useState(false);
+  
+  const dashboardRef = useRef(null);
+  const accountRef = useRef(null);
 
   const hideOnRoutes = ["/Login", "/Register"];
   if (hideOnRoutes.includes(location.pathname)) return null;
@@ -23,8 +27,23 @@ const Navbar = () => {
       }
     };
 
+    // Handle click outside to close dropdowns
+    const handleClickOutside = (event) => {
+      if (dashboardRef.current && !dashboardRef.current.contains(event.target)) {
+        setIsDashboardDropdownOpen(false);
+      }
+      if (accountRef.current && !accountRef.current.contains(event.target)) {
+        setIsAccountDropdownOpen(false);
+      }
+    };
+
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    document.addEventListener("mousedown", handleClickOutside);
+    
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   // Navigation items with icons
@@ -32,19 +51,18 @@ const Navbar = () => {
     { path: "/", label: "Home", icon: <Home size={16} /> },
     { path: "/about", label: "About", icon: <Briefcase size={16} /> },
     { path: "/contact", label: "Contact", icon: <Phone size={16} /> },
-    { path: "/InvestorDashboard", label: "Dashboard", icon: <User size={16} /> }
-   
-    
-    
-    
-    
-    
- 
   ];
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const closeMenu = () => setIsMenuOpen(false);
-  const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
+  const toggleAccountDropdown = () => setIsAccountDropdownOpen(!isAccountDropdownOpen);
+  const toggleDashboardDropdown = () => setIsDashboardDropdownOpen(!isDashboardDropdownOpen);
+
+  const handleDashboardOptionClick = (path) => {
+    navigate(path);
+    setIsDashboardDropdownOpen(false);
+    closeMenu();
+  };
 
   return (
     <motion.nav 
@@ -129,12 +147,81 @@ const Navbar = () => {
               </Link>
             ))}
             
+            {/* Dashboard Dropdown */}
+            <div className="relative" ref={dashboardRef}>
+              <button
+                onClick={toggleDashboardDropdown}
+                className={`relative px-4 py-2 rounded-lg flex items-center space-x-2 transition-all duration-300 ${
+                  isDashboardDropdownOpen || location.pathname.includes('/dashboard')
+                    ? "text-emerald-600 font-medium"
+                    : "text-slate-700 hover:text-emerald-600"
+                }`}
+              >
+                <User size={16} />
+                <span>Dashboard</span>
+                <motion.div
+                  animate={{ rotate: isDashboardDropdownOpen ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <ChevronDown size={16} />
+                </motion.div>
+                
+                {/* Hover effect */}
+                {hoveredItem === "dashboard" && (
+                  <motion.div 
+                    className="absolute inset-0 bg-emerald-50 rounded-lg -z-10"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.3 }}
+                  />
+                )}
+              </button>
+              
+              {/* Dashboard Dropdown Menu */}
+              <AnimatePresence>
+                {isDashboardDropdownOpen && (
+                  <motion.div
+                    className="absolute left-0 mt-2 w-48 origin-top-left rounded-xl bg-white shadow-xl border border-slate-200 overflow-hidden z-50"
+                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <div className="py-2 bg-gradient-to-b from-white to-slate-50">
+                      <button
+                        onClick={() => handleDashboardOptionClick('/Register')}
+                        className="flex items-center w-full px-4 py-3 text-slate-700 hover:bg-emerald-50 group transition-colors"
+                      >
+                        <Briefcase className="h-5 w-5 text-emerald-600 mr-3 group-hover:scale-110 transition-transform" />
+                        <div>
+                          <div className="font-medium text-left">Startups</div>
+                          <div className="text-sm text-slate-500">Start your startup</div>
+                        </div>
+                      </button>
+                      <div className="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent mx-4"></div>
+                      <button
+                        onClick={() => handleDashboardOptionClick('/Register')}
+                        className="flex items-center w-full px-4 py-3 text-slate-700 hover:bg-emerald-50 group transition-colors"
+                      >
+                        <User className="h-5 w-5 text-emerald-600 mr-3 group-hover:scale-110 transition-transform" />
+                        <div>
+                          <div className="font-medium text-left">Investors</div>
+                          <div className="text-sm text-slate-500">Join as investor</div>
+                        </div>
+                      </button>
+                    </div>
+                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400"></div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+            
             {/* Auth Buttons - Desktop */}
-            <div className="ml-4 flex items-center space-x-3 relative">
+            <div className="ml-4 flex items-center space-x-3 relative" ref={accountRef}>
               <div 
                 className="relative group"
-                onMouseEnter={() => setIsDropdownOpen(true)}
-                onMouseLeave={() => setIsDropdownOpen(false)}
+                onMouseEnter={() => setIsAccountDropdownOpen(true)}
+                onMouseLeave={() => setIsAccountDropdownOpen(false)}
               >
                 <motion.button
                   className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-slate-800 to-slate-900 text-white font-medium flex items-center space-x-2 shadow-lg"
@@ -147,7 +234,7 @@ const Navbar = () => {
                   <User size={16} />
                   <span>Account</span>
                   <motion.div
-                    animate={{ rotate: isDropdownOpen ? 180 : 0 }}
+                    animate={{ rotate: isAccountDropdownOpen ? 180 : 0 }}
                   >
                     <ChevronDown size={16} />
                   </motion.div>
@@ -172,7 +259,7 @@ const Navbar = () => {
                 
                 {/* Dropdown Menu */}
                 <AnimatePresence>
-                  {isDropdownOpen && (
+                  {isAccountDropdownOpen && (
                     <motion.div
                       className="absolute right-0 mt-2 w-56 origin-top-right rounded-xl bg-white shadow-xl border border-slate-200 overflow-hidden z-50"
                       initial={{ opacity: 0, y: -10 }}
@@ -289,6 +376,33 @@ const Navbar = () => {
                       <span className="font-medium">{item.label}</span>
                     </Link>
                   ))}
+                  
+                  {/* Dashboard dropdown in mobile */}
+                  <div className="px-4 py-3 rounded-xl bg-emerald-50">
+                    <div className="flex items-center space-x-3">
+                      <div className="p-2 rounded-lg bg-emerald-100 text-emerald-600">
+                        <User size={16} />
+                      </div>
+                      <span className="font-medium text-emerald-600">Dashboard</span>
+                    </div>
+                    
+                    <div className="mt-2 ml-11 space-y-2">
+                      <button
+                        onClick={() => handleDashboardOptionClick('/startup-registration')}
+                        className="flex items-center space-x-3 w-full px-3 py-2 rounded-lg text-slate-700 hover:bg-emerald-100 transition-colors"
+                      >
+                        <Briefcase size={16} />
+                        <span className="font-medium">Startups</span>
+                      </button>
+                      <button
+                        onClick={() => handleDashboardOptionClick('/investor-registration')}
+                        className="flex items-center space-x-3 w-full px-3 py-2 rounded-lg text-slate-700 hover:bg-emerald-100 transition-colors"
+                      >
+                        <User size={16} />
+                        <span className="font-medium">Investors</span>
+                      </button>
+                    </div>
+                  </div>
                 </div>
                 
                 <div className="mt-8 px-4 space-y-4">

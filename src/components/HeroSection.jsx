@@ -187,7 +187,7 @@ const Home = () => {
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: `url(${websiteData.heroBackgroundImage})` }}
         ></div>
-        <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
+        <div className="absolute inset-0 bg-white/0 backdrop-blur-sm"></div>
         
         {/* Luxury Background Pattern */}
         <div className="absolute inset-0">
@@ -238,9 +238,7 @@ const Home = () => {
               transition={{ delay: 1, duration: 0.8 }}
               className="mt-12"
             >
-              <p className="text-xl text-slate-600 max-w-2xl mx-auto font-light leading-relaxed">
-                The exclusive platform connecting visionary startups with discerning investors for transformative growth
-              </p>
+             <p className="text-xl text-slate-1000 max-w-2xl mx-auto font-bold leading-relaxed"> The exclusive platform connecting visionary startups with discerning investors for transformative growth. </p>
             </motion.div>
           </div>
 
