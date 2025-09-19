@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, Link } from 'react-router-dom';
 import { Mail, Lock, ArrowRight, AlertCircle, Loader2, Volume2 } from 'lucide-react';
 
+// Dashboard Components
 const StartupDashboard = () => (
   <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-8">
     <div className="max-w-6xl mx-auto">
@@ -555,21 +556,19 @@ const Login = () => {
   );
 };
 
-
-
 // App Component
 const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/Login" element={<Login />} />
-        <Route path="/Register" element={<div>Register Page - Implement your registration component here</div>} />
-        <Route path="/StartupDashboard" element={<StartupDashboard />} />
-        <Route path="/InvestorDashboard" element={<InvestorDashboard />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<div>Register Page - Implement your registration component here</div>} />
+        <Route path="/startup-dashboard" element={<StartupDashboard />} />
+        <Route path="/investor-dashboard" element={<InvestorDashboard />} />
         <Route path="/" element={<Login />} />
       </Routes>
     </Router>
   );
 };
 
-export default App;
+export default Login;

@@ -13,6 +13,8 @@ import Marketsurge from "./components/Marketsurge";
 import CursorFollower from './components/CursorFollower';
 import InvestorDashboard from "./pages/InvestorDashboard";
 import StartupDashboard from "./pages/StartupDashboard";
+import Terms from "./pages/Terms";
+import Privacypolicy from "./pages/Privacypolicy";
 
 
 
@@ -30,14 +32,16 @@ function App() {
            {/* Floating chatbot button on all pages */}
           <main className="flex-grow bg-gray-100">
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
+                     <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
-              <Route path="/Login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/Marketsurge" element={<Marketsurge />} />
-                <Route path="/InvestorDashboard" element={<InvestorDashboard />} />
-                  <Route path="/StartupDashboard" element={<StartupDashboard />} />
+                <Route path="/Login" element={<Login />} />
+             <Route path="/register" element={<Register />} />
+          <Route path="/Marketsurge" element={<Marketsurge />} />
+    <Route path="/InvestorDashboard" element={<InvestorDashboard />} />
+     <Route path="/StartupDashboard" element={<StartupDashboard />} />
+                 <Route path="/Terms"element={<Terms />} />
+          <Route path="/Privacypolicy"element={<Privacypolicy />} />
 
 
             </Routes>

@@ -44,9 +44,9 @@ const Footer = () => {
 
   const resourceLinks = [
     { name: "Blog", path: "/blog" },
-    { name: "Help Center", path: "/support" },
-    { name: "Terms of Service", path: "/terms" },
-    { name: "Privacy Policy", path: "/privacy" }
+    { name: "Help Center", path: "/Contact" },
+    { name: "Terms of Service", path: "/Terms" },
+    { name: "Privacy Policy", path: "/Privacypolicy" }
   ];
 
   const animateItem = {
