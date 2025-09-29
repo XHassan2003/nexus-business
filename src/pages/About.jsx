@@ -97,7 +97,7 @@ const About = () => {
   };
 
   return (
-    <div className="bg-gradient-to-b from-slate-50 to-white overflow-hidden">
+   <div className="relative min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 overflow-hidden py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
         {/* Premium Hero Section */}
         <div className="text-center relative z-10 pb-20">

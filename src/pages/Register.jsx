@@ -173,7 +173,7 @@ const Register = () => {
       localStorage.setItem('users', JSON.stringify(existingUsers));
       
       localStorage.setItem('currentUser', JSON.stringify({
-        email: newUser.email,
+        email: newUser.email,  
         name: newUser.name,
         accountType: newUser.accountType
       }));

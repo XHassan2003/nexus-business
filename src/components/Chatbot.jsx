@@ -23,7 +23,7 @@ const qaDatabase = [
 
 const ChatbotWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState([  
     { 
       text: 'Hello! I\'m your assistant. How can I help you today?', 
       sender: 'bot', 

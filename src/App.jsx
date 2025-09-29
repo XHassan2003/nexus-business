@@ -17,8 +17,7 @@ import Terms from "./pages/Terms";
 import Privacypolicy from "./pages/Privacypolicy";
 
 
-
- 
+    
 
 function App() {
   return (
@@ -41,7 +40,7 @@ function App() {
     <Route path="/InvestorDashboard" element={<InvestorDashboard />} />
      <Route path="/StartupDashboard" element={<StartupDashboard />} />
                  <Route path="/Terms"element={<Terms />} />
-          <Route path="/Privacypolicy"element={<Privacypolicy />} />
+          <Route path="/Privacypolicy"element={<Privacypolicy />} />  
 
 
             </Routes>
