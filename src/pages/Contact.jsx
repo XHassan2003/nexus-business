@@ -37,114 +37,12 @@ const Contact = () => {
     e.preventDefault();
     setIsSubmitted(true);
     // Clear form
-    setFormData({
-      name: '',
-      email: '',
-      subject: '',
-      message: '',
-    });
-  };
-
-  const closePopup = () => {
-    setIsSubmitted(false);
-  };
-
-  return (
-    <div className="relative min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 overflow-hidden py-20 px-4 sm:px-6 lg:px-8">
-      {/* Decorative Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Floating Circles */}
-        {[...Array(8)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute rounded-full opacity-10"
-            style={{
-              width: `${Math.random() * 200 + 100}px`,
-              height: `${Math.random() * 200 + 100}px`,
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              background: `radial-gradient(circle, ${
-                i % 3 === 0 
-                  ? '#10b981' 
-                  : i % 3 === 1 
-                    ? '#0ea5e9' 
-                    : '#8b5cf6'
-              }, transparent)`,
-            }}
-            animate={{
-              y: ["0%", "-10%", "0%"],
-            }}
-            transition={{
-              duration: Math.random() * 10 + 10,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          />
-        ))}
-
-        {/* Grid Pattern */}
-        <div className="absolute inset-0 opacity-[0.03]">
-          <div className="absolute inset-0 bg-[size:80px_80px] bg-[linear-gradient(to_right,transparent_50%,#000_50%),linear-gradient(to_bottom,transparent_50%,#000_50%)] rotate-45"></div>
-        </div>
-      </div>
-
-      {/* Header */}
-      <motion.div 
-        className="max-w-2xl mx-auto text-center mb-16 relative z-10"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        <motion.div
-          className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-emerald-50 to-teal-50 border border-slate-200 shadow-sm mb-6"
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.2, type: "spring" }}
-        >
-          <MessageSquare className="h-10 w-10 text-emerald-600" />
-        </motion.div>
-        
-        <motion.h1 
-          className="text-4xl sm:text-5xl font-bold text-slate-900"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
-          Contact <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">Nexus</span>
-        </motion.h1>
-        
-        <motion.p 
-          className="mt-4 text-slate-600 text-lg max-w-xl mx-auto"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-        >
-          We'd love to hear from you. Whether you're a startup, investor, or just curious—let's start a conversation.
-        </motion.p>
-      </motion.div>
-
-      {/* Form Section */}
-      <motion.div 
-        className="max-w-4xl mx-auto bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl border border-slate-200 relative overflow-hidden"
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.5 }}
-      >
-        {/* Decorative Corner */}
-        <div className="absolute top-0 right-0 w-32 h-32 overflow-hidden">
-          <div className="absolute -top-16 -right-16 w-32 h-32 rotate-45 bg-gradient-to-r from-emerald-400 to-emerald-500"></div>
-        </div>
-
+   
         <div className="px-8 py-12 sm:p-12 relative z-10">
           <form onSubmit={handleSubmit} className="space-y-8">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
               {/* Name Field */}
-              <div className="relative">
-                <div className="flex items-center mb-2">
-                  <User className="h-4 w-4 text-emerald-600 mr-2" />
-                  <label htmlFor="name" className="text-sm font-medium text-slate-700">
-                    Full Name
-                  </label>
+           \
                 </div>
                 <input
                   type="text"
@@ -163,23 +61,7 @@ const Contact = () => {
               {/* Email Field */}
               <div className="relative">
                 <div className="flex items-center mb-2">
-                  <Mail className="h-4 w-4 text-emerald-600 mr-2" />
-                  <label htmlFor="email" className="text-sm font-medium text-slate-700">
-                    Email Address
-                  </label>
-                </div>
-                <input
-                  type="email"
-                  name="email"
-                  id="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  onFocus={() => handleFocus('email')}
-                  onBlur={() => handleBlur('email')}
-                  required
-                  className="w-full bg-white/80 backdrop-blur-sm rounded-xl border border-slate-300 px-5 py-4 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-300"
-                  placeholder="Enter your email address"
-                />
+          
               </div>
               
               {/* Subject Field */}
