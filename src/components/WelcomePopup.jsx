@@ -292,15 +292,7 @@ export default function WelcomePopup({ onClose }) {
                 >
                   Where innovation meets sustainability. Begin your journey into a greener digital future.
                 </motion.p>
-              </div>
-
-              {/* Progress Indicator - Green */}
-              <div className="flex justify-center space-x-2 p-4">
-                {[0, 1, 2, 3].map(i => (
-                  <motion.div
-                    key={i}
-                    className={`w-2 h-2 rounded-full ${
-                      i <= currentStep 
+    
                         ? "bg-emerald-400" 
                         : "bg-white/20"
                     }`}

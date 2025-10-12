@@ -1,34 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
-import Home from "./pages/Home";
-import About from "./pages/About";
-import Contact from "./pages/Contact";
-import Login from "./pages/Login"
-import Register from "./pages/Register";
-import { AuthProvider } from "./contexts/AuthContext";
-import Chatbot from "./components/Chatbot";
-import Marketsurge from "./components/Marketsurge";
-import CursorFollower from './components/CursorFollower';
-import InvestorDashboard from "./pages/InvestorDashboard";
-import StartupDashboard from "./pages/StartupDashboard";
-import Terms from "./pages/Terms";
-import Privacypolicy from "./pages/Privacypolicy";
-
-
-    
-
-function App() {
-  return (
-     
-    <AuthProvider>
-      <Router>
-        <div className="flex flex-col min-h-screen">
-          <Navbar />
-          <Chatbot/>
-          <CursorFollower />
-           {/* Floating chatbot button on all pages */}
+all pages */}
           <main className="flex-grow bg-gray-100">
             <Routes>
                      <Route path="/" element={<Home />} />

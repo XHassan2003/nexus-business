@@ -139,20 +139,7 @@ const About = () => {
           </div>
         </div>
 
-        {/* Animated Stats */}
-        <div className="mt-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {stats.map((stat) => (
-            <div 
-              key={stat.id}
-              className="bg-white rounded-2xl p-6 shadow-xl border border-slate-100 transition-all hover:-translate-y-1"
-            >
-              <div className="absolute -mt-12">
-                <div className={`bg-gradient-to-r ${stat.color} p-3 rounded-xl shadow-lg`}>
-                  <BarChart2 className="h-6 w-6 text-white" />
-                </div>
-              </div>
-              <div className="mt-8">
-                <div className="text-3xl font-bold text-slate-900 mb-2">
+       nt-bold text-slate-900 mb-2">
                   <CountUp end={stat.value} suffix={stat.suffix} />
                 </div>
                 <div className="text-slate-600 font-medium">{stat.label}</div>

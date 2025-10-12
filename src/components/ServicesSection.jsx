@@ -570,26 +570,6 @@ export default function PremiumServicesSection() {
           }
         }
         
-        .animate-marquee {
-          animation: marquee 22s linear infinite;
-        }
         
-        @media (max-width: 640px) {
-          .animate-marquee {
-            animation-duration: 16s;
-          }
-        }
-        
-        /* Smooth scroll behavior */
-        html {
-          scroll-behavior: smooth;
-        }
-        
-        /* Performance optimizations */
-        .transform {
-          will-change: transform, opacity;
-        }
-      `}</style>
-    </section>
   );
 }
