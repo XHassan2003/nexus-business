@@ -120,7 +120,7 @@ const AnimatedSection = ({ children, delay = 0, threshold = 0.1, className = "" 
 };
 
 /* ------------------ Single Service Card ------------------ */
-const ServiceCard = ({ service, index }) => {
+const ServiceCard = ({ service}) => {
   const Icon = service.icon;
   const cardRef = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
@@ -241,7 +241,7 @@ const ServiceCard = ({ service, index }) => {
 };
 
 /* ------------------ NEW: Image Hover Card for MarketSurge, Leaderboard, MarketDiem ------------------ */
-const ImageHoverCard = ({ title, description, image, href }) => {
+const ImageHoverCard = ({ title, description, image }) => {
   const cardRef = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -469,22 +469,22 @@ export default function PremiumServicesSection() {
         {/* Header with enhanced scroll animation */}
         <AnimatedSection delay={0} threshold={0.2}>
           <div className="text-center mb-8">
-            <h2 className="text-4xl font-extrabold text-gray-900 transform transition-all duration-1000 ease-out">
+            <h2 className="text-4xl font-extrabold text-gray-900">
               Handpicked for Growth
             </h2>
-            <p className="mt-2 text-gray-600 max-w-2xl mx-auto transform transition-all duration-1000 ease-out delay-200">
+            <p className="mt-2 text-gray-600 max-w-2xl mx-auto">
               A premium suite of tools and services that helps founders and investors move faster —
               thoughtfully designed, deeply secure.
             </p>
           </div>
         </AnimatedSection>
 
-        {/* Auto-run card row with scroll animation */}
+        {/* Auto-run card row */}
         <AnimatedSection delay={200} threshold={0.15}>
           <div className="relative overflow-hidden py-6">
             <div className="flex gap-6 px-2 will-change-transform">
               {[...services, ...services].map((s, i) => (
-                <ServiceCard key={i} service={s} index={i} />
+                <ServiceCard key={i} service={s} />
               ))}
             </div>
 
@@ -494,10 +494,10 @@ export default function PremiumServicesSection() {
           </div>
         </AnimatedSection>
 
-        {/* News logos marquee with enhanced hover effects */}
+        {/* News logos marquee */}
         <AnimatedSection delay={400} threshold={0.1}>
           <div className="mt-10 bg-white rounded-3xl p-4 shadow-md border border-gray-100 group/marquee">
-            <h3 className="text-sm font-semibold text-gray-700 mb-3 transform transition-all duration-1000 ease-out">
+            <h3 className="text-sm font-semibold text-gray-700 mb-3">
               Featured In
             </h3>
 
@@ -505,6 +505,8 @@ export default function PremiumServicesSection() {
               ref={marqueeRef}
               className="relative overflow-hidden rounded-xl"
               aria-label="News logos carousel"
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
             >
               <div
                 className={`flex gap-8 items-center will-change-transform ${
@@ -518,10 +520,10 @@ export default function PremiumServicesSection() {
                     className="flex flex-col items-center w-36 flex-shrink-0 opacity-80 hover:opacity-100 transition-all duration-500 hover:scale-110 group-hover/marquee:scale-95 group-hover/marquee:hover:scale-110"
                   >
                     <div className="relative p-3 rounded-2xl hover:bg-gradient-to-br hover:from-emerald-50 hover:to-green-50 transition-all duration-500">
-                      <img 
-                        src={logo.src} 
-                        alt={logo.alt} 
-                        className="h-10 object-contain mb-1 filter grayscale hover:grayscale-0 transition-all duration-500 hover:scale-110" 
+                      <img
+                        src={logo.src}
+                        alt={logo.alt}
+                        className="h-10 object-contain mb-1 filter grayscale hover:grayscale-0 transition-all duration-500 hover:scale-110"
                       />
                     </div>
                     <span className="text-xs font-semibold text-gray-600 mt-1 hover:text-emerald-600 transition-colors duration-300">
@@ -534,7 +536,7 @@ export default function PremiumServicesSection() {
           </div>
         </AnimatedSection>
 
-        {/* NEW: Tools grid with Image Hover Cards */}
+        {/* Tools Grid */}
         <AnimatedSection delay={600} threshold={0.1}>
           <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
             <ImageHoverCard
@@ -559,17 +561,20 @@ export default function PremiumServicesSection() {
         </AnimatedSection>
       </div>
 
-      {/* Enhanced scoped styles */}
-      <style jsx>{`
-        @keyframes marquee {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-        
-        
+      {/* Scoped Styles */}
+<style>{`
+  @keyframes marquee {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+  .animate-marquee {
+    animation: marquee 30s linear infinite;
+  }
+`}</style>
+    </section>
   );
 }

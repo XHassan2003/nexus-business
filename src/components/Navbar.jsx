@@ -1,35 +1,42 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, User, Briefcase, Phone, Home, LogIn, UserPlus, ChevronDown } from 'lucide-react';
+import { motion, AnimatePresence } from "framer-motion"; // eslint-disable-line no-unused-vars
+import {
+  Menu,
+  X,
+  User,
+  Briefcase,
+  Phone,
+  Home,
+  LogIn,
+  UserPlus,
+  ChevronDown,
+} from "lucide-react";
 
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [hoveredItem, setHoveredItem] = useState(null);
   const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
   const [isDashboardDropdownOpen, setIsDashboardDropdownOpen] = useState(false);
-  
+
   const dashboardRef = useRef(null);
   const accountRef = useRef(null);
 
-  const hideOnRoutes = ["/Login", "/Register"];
-  if (hideOnRoutes.includes(location.pathname)) return null;
-
+  // Scroll + click-outside handlers
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 10) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
+      setScrolled(window.scrollY > 20);
     };
 
-    // Handle click outside to close dropdowns
     const handleClickOutside = (event) => {
-      if (dashboardRef.current && !dashboardRef.current.contains(event.target)) {
+      if (
+        dashboardRef.current &&
+        !dashboardRef.current.contains(event.target)
+      ) {
         setIsDashboardDropdownOpen(false);
       }
       if (accountRef.current && !accountRef.current.contains(event.target)) {
@@ -39,14 +46,20 @@ const Navbar = () => {
 
     window.addEventListener("scroll", handleScroll);
     document.addEventListener("mousedown", handleClickOutside);
-    
+
+    // initialize scroll state
+    handleScroll();
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
-  // Navigation items with icons
+  const hideOnRoutes = ["/Login", "/Register"];
+  if (hideOnRoutes.includes(location.pathname)) return null;
+
+  // Navigation items
   const navItems = [
     { path: "/", label: "Home", icon: <Home size={16} /> },
     { path: "/about", label: "About", icon: <Briefcase size={16} /> },
@@ -55,8 +68,8 @@ const Navbar = () => {
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const closeMenu = () => setIsMenuOpen(false);
-  const toggleAccountDropdown = () => setIsAccountDropdownOpen(!isAccountDropdownOpen);
-  const toggleDashboardDropdown = () => setIsDashboardDropdownOpen(!isDashboardDropdownOpen);
+  const toggleDashboardDropdown = () =>
+    setIsDashboardDropdownOpen(!isDashboardDropdownOpen);
 
   const handleDashboardOptionClick = (path) => {
     navigate(path);
@@ -65,32 +78,32 @@ const Navbar = () => {
   };
 
   return (
-    <motion.nav 
+    <motion.nav
       className={`fixed w-full z-50 transition-all duration-500 ${
-        scrolled 
-          ? "bg-white/90 backdrop-blur-xl shadow-sm py-2" 
+        scrolled
+          ? "bg-white/90 backdrop-blur-xl shadow-sm py-2"
           : "bg-transparent py-4"
       }`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
     >
-      {/* Decorative top border */}
+      {/* Decorative Top Border */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400"></div>
-      
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           {/* Logo */}
-          <Link 
-            to="/" 
+          <Link
+            to="/"
             className="flex items-center space-x-2 group"
             onMouseEnter={() => setHoveredItem("logo")}
             onMouseLeave={() => setHoveredItem(null)}
           >
-            <motion.div 
+            <motion.div
               className="relative"
               animate={{
-                rotate: hoveredItem === "logo" ? [0, 10, -10, 5, 0] : 0
+                rotate: hoveredItem === "logo" ? [0, 10, -10, 5, 0] : 0,
               }}
               transition={{ duration: 0.5 }}
             >
@@ -98,15 +111,15 @@ const Navbar = () => {
                 <div className="w-3 h-3 bg-white rounded-full"></div>
               </div>
             </motion.div>
-            
-            <motion.span 
+
+            <motion.span
               className="text-xl font-bold bg-gradient-to-r from-slate-800 to-slate-900 bg-clip-text text-transparent"
               animate={{
-                x: hoveredItem === "logo" ? [0, 3, -3, 1, 0] : 0
+                x: hoveredItem === "logo" ? [0, 3, -3, 1, 0] : 0,
               }}
               transition={{ duration: 0.5 }}
             >
-              Nexus 
+              Nexus
             </motion.span>
           </Link>
 
@@ -126,18 +139,16 @@ const Navbar = () => {
               >
                 {item.icon}
                 <span>{item.label}</span>
-                
-                {/* Animated underline */}
+
                 {location.pathname === item.path && (
-                  <motion.div 
+                  <motion.div
                     className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-500 rounded-full"
                     layoutId="navIndicator"
                   />
                 )}
-                
-                {/* Hover effect */}
+
                 {hoveredItem === item.path && (
-                  <motion.div 
+                  <motion.div
                     className="absolute inset-0 bg-emerald-50 rounded-lg -z-10"
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -146,13 +157,14 @@ const Navbar = () => {
                 )}
               </Link>
             ))}
-            
+
             {/* Dashboard Dropdown */}
             <div className="relative" ref={dashboardRef}>
               <button
                 onClick={toggleDashboardDropdown}
                 className={`relative px-4 py-2 rounded-lg flex items-center space-x-2 transition-all duration-300 ${
-                  isDashboardDropdownOpen || location.pathname.includes('/dashboard')
+                  isDashboardDropdownOpen ||
+                  location.pathname.includes("/dashboard")
                     ? "text-emerald-600 font-medium"
                     : "text-slate-700 hover:text-emerald-600"
                 }`}
@@ -165,19 +177,8 @@ const Navbar = () => {
                 >
                   <ChevronDown size={16} />
                 </motion.div>
-                
-                {/* Hover effect */}
-                {hoveredItem === "dashboard" && (
-                  <motion.div 
-                    className="absolute inset-0 bg-emerald-50 rounded-lg -z-10"
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.3 }}
-                  />
-                )}
               </button>
-              
-              {/* Dashboard Dropdown Menu */}
+
               <AnimatePresence>
                 {isDashboardDropdownOpen && (
                   <motion.div
@@ -189,24 +190,30 @@ const Navbar = () => {
                   >
                     <div className="py-2 bg-gradient-to-b from-white to-slate-50">
                       <button
-                        onClick={() => handleDashboardOptionClick('/Register')}
+                        onClick={() => handleDashboardOptionClick("/Register")}
                         className="flex items-center w-full px-4 py-3 text-slate-700 hover:bg-emerald-50 group transition-colors"
                       >
                         <Briefcase className="h-5 w-5 text-emerald-600 mr-3 group-hover:scale-110 transition-transform" />
                         <div>
                           <div className="font-medium text-left">Startups</div>
-                          <div className="text-sm text-slate-500">Start your startup</div>
+                          <div className="text-sm text-slate-500">
+                            Start your startup
+                          </div>
                         </div>
                       </button>
+
                       <div className="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent mx-4"></div>
+
                       <button
-                        onClick={() => handleDashboardOptionClick('/Register')}
+                        onClick={() => handleDashboardOptionClick("/Register")}
                         className="flex items-center w-full px-4 py-3 text-slate-700 hover:bg-emerald-50 group transition-colors"
                       >
                         <User className="h-5 w-5 text-emerald-600 mr-3 group-hover:scale-110 transition-transform" />
                         <div>
                           <div className="font-medium text-left">Investors</div>
-                          <div className="text-sm text-slate-500">Join as investor</div>
+                          <div className="text-sm text-slate-500">
+                            Join as investor
+                          </div>
                         </div>
                       </button>
                     </div>
@@ -215,19 +222,19 @@ const Navbar = () => {
                 )}
               </AnimatePresence>
             </div>
-            
-            {/* Auth Buttons - Desktop */}
+
+            {/* Account Dropdown */}
             <div className="ml-4 flex items-center space-x-3 relative" ref={accountRef}>
-              <div 
+              <div
                 className="relative group"
                 onMouseEnter={() => setIsAccountDropdownOpen(true)}
                 onMouseLeave={() => setIsAccountDropdownOpen(false)}
               >
                 <motion.button
                   className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-slate-800 to-slate-900 text-white font-medium flex items-center space-x-2 shadow-lg"
-                  whileHover={{ 
+                  whileHover={{
                     scale: 1.03,
-                    boxShadow: "0 10px 25px -5px rgba(15, 23, 42, 0.2)"
+                    boxShadow: "0 10px 25px -5px rgba(15, 23, 42, 0.2)",
                   }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -239,25 +246,7 @@ const Navbar = () => {
                     <ChevronDown size={16} />
                   </motion.div>
                 </motion.button>
-                
-                {/* Button shine effect */}
-                <motion.div 
-                  className="absolute top-0 left-0 w-full h-full overflow-hidden rounded-xl"
-                  initial={{ opacity: 0 }}
-                  animate={{ 
-                    opacity: [0, 0.8, 0],
-                    left: ["-100%", "100%", "100%"]
-                  }}
-                  transition={{ 
-                    duration: 1.5, 
-                    repeat: Infinity,
-                    repeatDelay: 2
-                  }}
-                >
-                  <div className="absolute top-0 left-0 w-8 h-full bg-white/30 skew-x-12"></div>
-                </motion.div>
-                
-                {/* Dropdown Menu */}
+
                 <AnimatePresence>
                   {isAccountDropdownOpen && (
                     <motion.div
@@ -272,21 +261,27 @@ const Navbar = () => {
                           to="/Login"
                           className="flex items-center px-4 py-3 text-slate-700 hover:bg-emerald-50 group transition-colors"
                         >
-                          <LogIn className="h-5 w-5 text-emerald-600 mr-3 group-hover:scale-110 transition-transform" />
+                          <LogIn className="h-5 w-5 text-emerald-600 mr-3" />
                           <div>
                             <div className="font-medium">Login</div>
-                            <div className="text-sm text-slate-500">Access your account</div>
+                            <div className="text-sm text-slate-500">
+                              Access your account
+                            </div>
                           </div>
                         </Link>
+
                         <div className="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent mx-4"></div>
+
                         <Link
-                          to="/register"
+                          to="/Register"
                           className="flex items-center px-4 py-3 text-slate-700 hover:bg-emerald-50 group transition-colors"
                         >
-                          <UserPlus className="h-5 w-5 text-emerald-600 mr-3 group-hover:scale-110 transition-transform" />
+                          <UserPlus className="h-5 w-5 text-emerald-600 mr-3" />
                           <div>
                             <div className="font-medium">Register</div>
-                            <div className="text-sm text-slate-500">Create new account</div>
+                            <div className="text-sm text-slate-500">
+                              Create new account
+                            </div>
                           </div>
                         </Link>
                       </div>
@@ -298,7 +293,7 @@ const Navbar = () => {
             </div>
           </div>
 
-          {/* Mobile menu button */}
+          {/* Mobile Menu Button */}
           <div className="md:hidden">
             <motion.button
               onClick={toggleMenu}
@@ -311,24 +306,12 @@ const Navbar = () => {
               ) : (
                 <Menu className="text-slate-700" size={24} />
               )}
-              
-              {/* Button indicator */}
-              <AnimatePresence>
-                {!isMenuOpen && (
-                  <motion.div 
-                    className="absolute top-1 right-1 w-2 h-2 bg-emerald-500 rounded-full"
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    exit={{ scale: 0 }}
-                  />
-                )}
-              </AnimatePresence>
             </motion.button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* ✅ Mobile Menu Overlay */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
@@ -350,9 +333,11 @@ const Navbar = () => {
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-md">
                   <div className="w-3 h-3 bg-white rounded-full"></div>
                 </div>
-                <span className="ml-3 text-xl font-bold text-slate-900">Nexus</span>
+                <span className="ml-3 text-xl font-bold text-slate-900">
+                  Nexus
+                </span>
               </div>
-              
+
               <div className="py-6 px-4">
                 <div className="space-y-2">
                   {navItems.map((item) => (
@@ -366,36 +351,45 @@ const Navbar = () => {
                       }`}
                       onClick={closeMenu}
                     >
-                      <div className={`p-2 rounded-lg ${
-                        location.pathname === item.path
-                          ? "bg-emerald-100 text-emerald-600"
-                          : "bg-slate-100 text-slate-600"
-                      }`}>
+                      <div
+                        className={`p-2 rounded-lg ${
+                          location.pathname === item.path
+                            ? "bg-emerald-100 text-emerald-600"
+                            : "bg-slate-100 text-slate-600"
+                        }`}
+                      >
                         {item.icon}
                       </div>
                       <span className="font-medium">{item.label}</span>
                     </Link>
                   ))}
-                  
-                  {/* Dashboard dropdown in mobile */}
+
+                  {/* Dashboard Section (Mobile) */}
                   <div className="px-4 py-3 rounded-xl bg-emerald-50">
                     <div className="flex items-center space-x-3">
                       <div className="p-2 rounded-lg bg-emerald-100 text-emerald-600">
                         <User size={16} />
                       </div>
-                      <span className="font-medium text-emerald-600">Dashboard</span>
+                      <span className="font-medium text-emerald-600">
+                        Dashboard
+                      </span>
                     </div>
-                    
+
                     <div className="mt-2 ml-11 space-y-2">
                       <button
-                        onClick={() => handleDashboardOptionClick('/startup-registration')}
+                        onClick={() =>
+                          handleDashboardOptionClick("/startup-registration")
+                        }
                         className="flex items-center space-x-3 w-full px-3 py-2 rounded-lg text-slate-700 hover:bg-emerald-100 transition-colors"
                       >
                         <Briefcase size={16} />
                         <span className="font-medium">Startups</span>
                       </button>
+
                       <button
-                        onClick={() => handleDashboardOptionClick('/investor-registration')}
+                        onClick={() =>
+                          handleDashboardOptionClick("/investor-registration")
+                        }
                         className="flex items-center space-x-3 w-full px-3 py-2 rounded-lg text-slate-700 hover:bg-emerald-100 transition-colors"
                       >
                         <User size={16} />
@@ -404,7 +398,8 @@ const Navbar = () => {
                     </div>
                   </div>
                 </div>
-                
+
+                {/* Auth Buttons (Mobile) */}
                 <div className="mt-8 px-4 space-y-4">
                   <Link
                     to="/Login"
@@ -414,10 +409,10 @@ const Navbar = () => {
                     <LogIn size={18} />
                     <span>Login</span>
                   </Link>
-                  
+
                   <Link
                     to="/Register"
-                    className="block w-full py-3.5 text-center bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-medium rounded-xl shadow-lg shadow-emerald-500/20 flex items-center justify-center space-x-2"
+                    className="block w-full py-3.5 text-center bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-medium rounded-xl shadow-lg flex items-center justify-center space-x-2"
                     onClick={closeMenu}
                   >
                     <UserPlus size={18} />
@@ -425,14 +420,14 @@ const Navbar = () => {
                   </Link>
                 </div>
               </div>
-              
-              {/* Decorative bottom */}
+
+              {/* Bottom Gradient */}
               <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400"></div>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.nav>
+  </motion.nav>
   );
 };
 

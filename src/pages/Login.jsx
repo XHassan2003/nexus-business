@@ -253,10 +253,12 @@ const Login = () => {
     try {
       // Get users from localStorage
       const users = JSON.parse(localStorage.getItem('users') || '[]');
-      
+
       // Find user with matching credentials
-      const user = users.find(u => u.email === email && u.password === password);
-      
+      const user = users.find(
+        (u) => u.email === email && u.password === password
+      );
+
       if (user) {
         // Check if user is verified
         if (!user.verified) {
@@ -264,21 +266,24 @@ const Login = () => {
           setIsLoading(false);
           return;
         }
-        
-        // Login successful
+
+        // Handle remember me
         if (rememberMe) {
           localStorage.setItem('rememberedEmail', email);
         } else {
           localStorage.removeItem('rememberedEmail');
         }
-        
+
         // Store current session
-        localStorage.setItem('currentUser', JSON.stringify({
-          email: user.email,
-          name: user.name,
-          accountType: user.accountType
-        }));
-        
+        localStorage.setItem(
+          'currentUser',
+          JSON.stringify({
+            email: user.email,
+            name: user.name,
+            accountType: user.accountType,
+          })
+        );
+
         // Navigate based on account type
         if (user.accountType === 'startup') {
           navigate('/startup-dashboard');
@@ -291,6 +296,7 @@ const Login = () => {
         setErrorMsg('Invalid email or password.');
       }
     } catch (error) {
+      console.error(error);
       setErrorMsg('Login failed. Please try again.');
     } finally {
       setIsLoading(false);

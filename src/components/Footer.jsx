@@ -1,15 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+// eslint-disable-next-line no-unused-vars
+import { motion } from 'framer-motion';  // ✅ Add this line back
 import { Github, Twitter, Linkedin, Mail, ArrowRight, Heart } from 'lucide-react';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
-  
+
   // Social media data with animations
   const socialLinks = [
     { 
-    
+      icon: <Github className="h-5 w-5" />, 
+      url: "https://github.com", 
+      color: "from-gray-700 to-gray-900",
+      hover: "hover:shadow-gray-500/20"
     },
     { 
       icon: <Twitter className="h-5 w-5" />, 
@@ -41,9 +45,9 @@ const Footer = () => {
 
   const resourceLinks = [
     { name: "Blog", path: "/blog" },
-    { name: "Help Center", path: "/Contact" },
-    { name: "Terms of Service", path: "/Terms" },
-    { name: "Privacy Policy", path: "/Privacypolicy" }
+    { name: "Help Center", path: "/contact" },
+    { name: "Terms of Service", path: "/terms" },
+    { name: "Privacy Policy", path: "/privacypolicy" }
   ];
 
   const animateItem = {
@@ -64,12 +68,20 @@ const Footer = () => {
     >
       {/* Decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {
+        {[...Array(5)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-64 h-64 rounded-full blur-3xl opacity-20"
+            style={{
+              background: `radial-gradient(circle, ${
+                i % 3 === 0 
                   ? '#10b981' 
                   : i % 3 === 1 
-                    ? '#0ea5e9' 
-                    : '#8b5cf6'
+                  ? '#0ea5e9' 
+                  : '#8b5cf6'
               }, transparent)`,
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
             }}
             animate={{
               y: ["0%", "-5%", "0%"],

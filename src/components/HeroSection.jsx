@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { motion, useAnimation } from 'framer-motion';
+import { useAnimation, motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 
 const AnimatedText = ({ text, className, delay = 0 }) => {
@@ -80,7 +80,7 @@ const PlantIcon = ({ className, delay = 0 }) => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     initial={{ scale: 0, rotate: -180 }}
-    animate={{ 
+    animate={{
       scale: [0.8, 1.2, 0.8],
       rotate: [0, 360],
     }}
@@ -110,7 +110,7 @@ const LeafIcon = ({ className, delay = 0 }) => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     initial={{ scale: 0, rotate: 180 }}
-    animate={{ 
+    animate={{
       scale: [0.6, 1.1, 0.6],
       rotate: [0, -360],
     }}
@@ -140,7 +140,7 @@ const FinancialChartIcon = ({ className, delay = 0 }) => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     initial={{ scale: 0 }}
-    animate={{ 
+    animate={{
       scale: [0.7, 1.3, 0.7],
       rotate: [0, 180, 360],
     }}
@@ -221,8 +221,8 @@ const ProfessionalImageWithStats = () => {
         className="relative w-80 h-96 lg:w-96 lg:h-[500px] z-10"
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ 
-          duration: 1.2, 
+        transition={{
+          duration: 1.2,
           delay: 0.6,
           ease: "easeOut",
           scale: {
@@ -231,24 +231,24 @@ const ProfessionalImageWithStats = () => {
             stiffness: 100
           }
         }}
-        whileHover={{ 
+        whileHover={{
           scale: 1.02,
           transition: { duration: 0 }
         }}
       >
         {/* Professional Person Image from array */}
         {professionalImages.map((image) => (
-          <motion.img 
+          <motion.img
             key={image.id}
             src={image.url}
             alt={image.alt}
             className="w-full h-full object-contain drop-shadow-2xl"
-            style={{ 
+            style={{
               filter: 'drop-shadow(0 30px 60px rgba(0, 0, 0, 0.2))',
             }}
             initial={{ scale: 1.1 }}
             animate={{ scale: 1 }}
-            transition={{ 
+            transition={{
               duration: 1.5,
               delay: 0.8,
               ease: "easeOut"
@@ -353,13 +353,13 @@ const ProfessionalImageWithStats = () => {
 // Enhanced Professional Card Component
 const ProfessionalCard = ({ card, index }) => {
   const cardVariants = {
-    hidden: { 
-      opacity: 0, 
+    hidden: {
+      opacity: 0,
       y: 60,
       scale: 0.9
     },
-    visible: { 
-      opacity: 1, 
+    visible: {
+      opacity: 1,
       y: 0,
       scale: 1,
       transition: {
@@ -384,8 +384,8 @@ const ProfessionalCard = ({ card, index }) => {
 
   const iconVariants = {
     hidden: { scale: 0, rotate: -180 },
-    visible: { 
-      scale: 1, 
+    visible: {
+      scale: 1,
       rotate: 0,
       transition: {
         type: "spring",
@@ -406,8 +406,8 @@ const ProfessionalCard = ({ card, index }) => {
 
   const backgroundVariants = {
     hidden: { scale: 0.8, opacity: 0 },
-    visible: { 
-      scale: 1, 
+    visible: {
+      scale: 1,
       opacity: 1,
       transition: { delay: index * 0.2 + 0.1 }
     },
@@ -450,14 +450,14 @@ const ProfessionalCard = ({ card, index }) => {
         variants={backgroundVariants}
         className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-white to-emerald-50/50 z-0"
       />
-      
+
       {/* Floating Particles */}
       <div className="absolute inset-0 overflow-hidden z-0">
         {[...Array(5)].map((_, i) => (
           <motion.div
             key={i}
             className="absolute w-2 h-2 bg-gradient-to-r from-blue-400 to-emerald-400 rounded-full opacity-20"
-            initial={{ 
+            initial={{
               x: Math.random() * 100,
               y: Math.random() * 100,
               scale: 0
@@ -498,13 +498,13 @@ const ProfessionalCard = ({ card, index }) => {
                 transition: { duration: 0.4 }
               }}
             />
-            
+
             {/* Icon Container */}
             <div className="relative bg-gradient-to-br from-slate-50 to-slate-100 p-4 rounded-2xl border border-slate-200 shadow-lg group-hover:shadow-xl transition-all duration-300">
               <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${card.iconColor} flex items-center justify-center shadow-inner relative overflow-hidden`}>
                 {/* Icon Shine Effect */}
                 <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-                
+
                 <svg
                   className="h-8 w-8 text-white relative z-10"
                   fill="none"
@@ -576,7 +576,7 @@ const ProfessionalCard = ({ card, index }) => {
       <div className="absolute top-0 right-0 w-20 h-20 overflow-hidden">
         <div className="absolute -top-10 -right-10 w-20 h-20 rotate-45 bg-gradient-to-r from-blue-400 to-emerald-400 opacity-0 group-hover:opacity-10 transition-opacity duration-500" />
       </div>
-      
+
       <div className="absolute bottom-0 left-0 w-20 h-20 overflow-hidden">
         <div className="absolute -bottom-10 -left-10 w-20 h-20 rotate-45 bg-gradient-to-r from-emerald-400 to-blue-400 opacity-0 group-hover:opacity-10 transition-opacity duration-500" />
       </div>
@@ -593,11 +593,11 @@ const Home = () => {
         <div className="absolute inset-0 opacity-5">
           <div className="absolute inset-0 bg-[radial-gradient(#000000_1px,transparent_1px)] bg-[length:20px_20px]"></div>
         </div>
-        
+
         {/* Floating Background Elements */}
         <div className="absolute top-20 left-10 w-72 h-72 bg-blue-200/20 rounded-full blur-3xl"></div>
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-emerald-200/20 rounded-full blur-3xl"></div>
-        
+
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-screen flex items-center">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center w-full py-20">
             {/* Left Content */}
@@ -615,7 +615,7 @@ const Home = () => {
                   </span>
                 </h1>
               </motion.div>
-              
+
               {/* Subheadline */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
@@ -626,7 +626,7 @@ const Home = () => {
                   Navigate Complex Financial Challenges With Confidence
                 </p>
               </motion.div>
-              
+
               {/* Description */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
@@ -637,7 +637,7 @@ const Home = () => {
                   We provide expert financial consulting services designed to help businesses of all sizes achieve their goals, whether you're looking to optimize operations, secure funding, or plan for sustainable growth.
                 </p>
               </motion.div>
-              
+
               {/* CTA Buttons */}
               <motion.div
                 className="flex flex-col sm:flex-row gap-4 pt-4"
@@ -646,7 +646,7 @@ const Home = () => {
                 transition={{ duration: 0.8, delay: 0.6 }}
               >
                 <motion.button
-                  whileHover={{ 
+                  whileHover={{
                     scale: 1.05,
                     boxShadow: "0 10px 25px -5px rgba(37, 99, 235, 0.3)"
                   }}
@@ -655,9 +655,9 @@ const Home = () => {
                 >
                   EXPLORE OUR SERVICES
                 </motion.button>
-                
+
                 <motion.button
-                  whileHover={{ 
+                  whileHover={{
                     scale: 1.05,
                     boxShadow: "0 10px 25px -5px rgba(5, 150, 105, 0.3)"
                   }}
@@ -668,7 +668,7 @@ const Home = () => {
                 </motion.button>
               </motion.div>
             </div>
-            
+
             {/* Right Visual - Professional Image with Stats */}
             <motion.div
               initial={{ opacity: 0, x: 50 }}
@@ -680,15 +680,15 @@ const Home = () => {
             </motion.div>
           </div>
         </div>
-        
+
         {/* Scroll Indicator */}
-        <motion.div 
+        <motion.div
           className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
           <div className="w-6 h-10 border-2 border-gray-300 rounded-full flex justify-center">
-            <motion.div 
+            <motion.div
               className="w-1 h-3 bg-gray-400 rounded-full mt-2"
               animate={{ opacity: [0, 1, 0] }}
               transition={{ duration: 2, repeat: Infinity }}
@@ -720,7 +720,7 @@ const Home = () => {
               </p>
             </motion.div>
           </div>
-          
+
           {/* Enhanced Cards Section */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {[
@@ -758,19 +758,26 @@ const Home = () => {
             {/* Background pattern */}
             <div className="absolute inset-0 opacity-10 [mask-image:radial-gradient(ellipse_at_center,white,transparent)]">
               <div className="absolute inset-0 [background-size:80px_80px] [background-image:linear-gradient(to_right,transparent_50%,#000_50%),linear-gradient(to_bottom,transparent_50%,#000_50%)] rotate-45"></div>
-     rt of the premier investment ecosystem connecting exceptional startups with visionary investors.
-            </p>
-            <div className="flex justify-center relative z-10">
-              <motion.button
-                whileHover={{ 
-                  scale: 1.05,
-                  boxShadow: "0 10px 25px -5px rgba(16, 185, 129, 0.3)"
-                }}
-                whileTap={{ scale: 0.98 }}
-                className="px-10 py-4 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-medium rounded-lg shadow-lg transition-all"
-              >
-                Request Access
-              </motion.button>
+            </div>
+
+            {/* CTA Content */}
+            <div className="relative z-10 max-w-3xl mx-auto text-white">
+              <h3 className="text-2xl font-semibold mb-4">Become part of the premier investment ecosystem</h3>
+              <p className="mb-8 text-lg opacity-80">
+                Be part of the premier investment ecosystem connecting exceptional startups with visionary investors.
+              </p>
+              <div className="flex justify-center">
+                <motion.button
+                  whileHover={{
+                    scale: 1.05,
+                    boxShadow: "0 10px 25px -5px rgba(16, 185, 129, 0.3)"
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                  className="px-10 py-4 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-medium rounded-lg shadow-lg transition-all"
+                >
+                  Request Access
+                </motion.button>
+              </div>
             </div>
           </motion.div>
         </div>

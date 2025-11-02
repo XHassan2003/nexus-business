@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion as Motion } from 'framer-motion';
 
 export default function GallerySlider() {
   const successStories = [
@@ -76,7 +76,7 @@ export default function GallerySlider() {
       
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="text-center mb-16">
-          <motion.h1 
+          <Motion.h1 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -86,9 +86,9 @@ export default function GallerySlider() {
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-500 via-emerald-600 to-teal-700">
               Success Stories
             </span>
-          </motion.h1>
+          </Motion.h1>
           
-          <motion.p
+          <Motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -96,7 +96,7 @@ export default function GallerySlider() {
             className="text-gray-600 text-lg max-w-2xl mx-auto"
           >
             Discover how startups achieved their goals through our platform
-          </motion.p>
+          </Motion.p>
         </div>
 
         <div 
@@ -135,7 +135,7 @@ export default function GallerySlider() {
           >
             <div className="flex gap-8 pb-6 px-4">
               {successStories.map((story, idx) => (
-                <motion.div
+                <Motion.div
                   key={idx}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -148,7 +148,7 @@ export default function GallerySlider() {
                   className="gallery-card min-w-[300px] md:min-w-[400px] bg-white rounded-2xl overflow-hidden shadow-xl relative group cursor-pointer"
                 >
                   <div className="relative overflow-hidden">
-                    <motion.img
+                    <Motion.img
                       src={story.image}
                       alt={story.title}
                       className="w-full h-56 md:h-64 object-cover"
@@ -163,14 +163,14 @@ export default function GallerySlider() {
                   </div>
                   
                   <div className="p-6 relative z-10">
-                    <motion.div 
+                    <Motion.div 
                       className="absolute -top-5 right-6 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs font-bold py-1 px-3 rounded-full shadow-lg"
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.4 }}
                     >
                       Featured
-                    </motion.div>
+                    </Motion.div>
                     
                     <h3 className="text-2xl font-bold text-gray-800 mb-2 group-hover:text-emerald-700 transition-colors duration-300">
                       {story.title}
@@ -179,7 +179,7 @@ export default function GallerySlider() {
                       {story.description}
                     </p>
                     
-                    <motion.div 
+                    <Motion.div 
                       className="mt-4 flex items-center text-emerald-600 font-medium group-hover:text-emerald-700 transition-colors duration-300"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
@@ -189,9 +189,9 @@ export default function GallerySlider() {
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-1 transition-transform duration-300 group-hover:translate-x-1" viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
                       </svg>
-                    </motion.div>
+                    </Motion.div>
                   </div>
-                </motion.div>
+                </Motion.div>
               ))}
             </div>
           </div>
@@ -214,7 +214,7 @@ export default function GallerySlider() {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .hide-scrollbar {
           -ms-overflow-style: none;
           scrollbar-width: none;

@@ -200,23 +200,23 @@ const ChatbotWidget = () => {
       )}
 
       {/* Add custom styles for the green theme */}
-      <style jsx>{`
-        /* Custom scrollbar for the chat window */
-        .overflow-y-auto::-webkit-scrollbar {
-          width: 6px;
-        }
-        .overflow-y-auto::-webkit-scrollbar-track {
-          background: #f1f1f1;
-          border-radius: 10px;
-        }
-        .overflow-y-auto::-webkit-scrollbar-thumb {
-          background: #059669;
-          border-radius: 10px;
-        }
-        .overflow-y-auto::-webkit-scrollbar-thumb:hover {
-          background: #047857;
-        }
-      `}</style>
+<style>{`
+  /* Custom scrollbar for the chat window */
+  .overflow-y-auto::-webkit-scrollbar {
+    width: 6px;
+  }
+  .overflow-y-auto::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  .overflow-y-auto::-webkit-scrollbar-thumb {
+    background: #059669;
+    border-radius: 10px;
+  }
+  .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+    background: #047857;
+  }
+`}</style>
     </div>
   );
 };
